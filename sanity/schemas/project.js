@@ -45,6 +45,12 @@ export default {
       validation: Rule => Rule.required()
     },
     {
+      name: 'externalUrl',
+      title: 'External Link URL',
+      description: 'Optional — if set, clicking this card opens this URL instead of a gallery',
+      type: 'url',
+    },
+    {
       name: 'thumbnail',
       title: 'Thumbnail Image',
       description: 'Main image shown on the project card',

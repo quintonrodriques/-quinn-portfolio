@@ -280,6 +280,25 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
 
 .pcard:not(.card-exit):not(.card-enter):hover { transform: translateY(-8px); }
 .pcard.tall { grid-row: span 2; }
+
+/* External link badge */
+.pcard-external-badge {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.3s, transform 0.3s, background var(--transition);
+}
+.pcard:hover .pcard-external-badge {
+  opacity: 1;
+  transform: scale(1);
+}
 .pcard-img { aspect-ratio: 4/3; position: relative; overflow: hidden; }
 .pcard.tall .pcard-img { aspect-ratio: 4/5; }
 .pcard-img-inner {

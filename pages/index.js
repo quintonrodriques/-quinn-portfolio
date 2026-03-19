@@ -54,8 +54,16 @@ function ProjectCard({ project, index, onClick }) {
   const bg = project.thumbnailUrl || null
   const gradient = gradients[index % gradients.length]
 
+  const handleClick = () => {
+    if (project.externalUrl) {
+      window.open(project.externalUrl, '_blank', 'noopener noreferrer')
+    } else {
+      onClick(project)
+    }
+  }
+
   return (
-    <div className={`pcard r ${project.tall ? 'tall' : ''}`} onClick={() => onClick(project)}>
+    <div className={`pcard r ${project.tall ? 'tall' : ''}`} onClick={handleClick}>
       <div className="pcard-img">
         <div className="pcard-img-inner">
           {bg
@@ -63,6 +71,9 @@ function ProjectCard({ project, index, onClick }) {
             : <div className="pcard-img-placeholder" style={{ background: gradient }}>[ Preview ]</div>
           }
         </div>
+        {project.externalUrl && (
+          <div className="pcard-external-badge">↗</div>
+        )}
       </div>
       <div className="pcard-body">
         <div className="pcard-meta">

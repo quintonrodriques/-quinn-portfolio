@@ -243,24 +243,42 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
 }
 .mode-indicator::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transition: background var(--transition); }
 
-.cards-wrap { position: relative; min-height: 400px; }
+.cards-wrap { position: relative; }
 .cards-set {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
-  transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.76,0,0.24,1);
 }
-.cards-set.ui-set { opacity: 1; pointer-events: all; transform: none; }
-.cards-set.ux-set { display: none; }
-body.ux-mode .cards-set.ui-set { display: none; }
-body.ux-mode .cards-set.ux-set { display: grid; opacity: 1; pointer-events: all; transform: none; }
+.cards-set.hidden { display: none; }
 
-/* PROJECT CARD */
+/* Individual card stagger animation */
 .pcard {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 16px; overflow: hidden;
-  transition: background var(--transition), border-color var(--transition), transform 0.4s ease;
+  transition: background var(--transition), border-color var(--transition), transform 0.4s ease, opacity 0.4s ease;
   cursor: pointer;
 }
-.pcard:hover { transform: translateY(-8px); }
+
+/* Exit animation */
+.pcard.card-exit {
+  animation: cardExit 0.4s cubic-bezier(0.76,0,0.24,1) forwards;
+}
+
+/* Enter animation */
+.pcard.card-enter {
+  animation: cardEnter 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  opacity: 0;
+}
+
+@keyframes cardExit {
+  from { opacity: 1; transform: translateY(0px) scale(1); }
+  to   { opacity: 0; transform: translateY(40px) scale(0.94); }
+}
+
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(40px) scale(0.94); }
+  to   { opacity: 1; transform: translateY(0px) scale(1); }
+}
+
+.pcard:not(.card-exit):not(.card-enter):hover { transform: translateY(-8px); }
 .pcard.tall { grid-row: span 2; }
 .pcard-img { aspect-ratio: 4/3; position: relative; overflow: hidden; }
 .pcard.tall .pcard-img { aspect-ratio: 4/5; }

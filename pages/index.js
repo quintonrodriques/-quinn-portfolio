@@ -80,6 +80,50 @@ export default function Home({ uiProjects, uxProjects, about }) {
   const [isUX, setIsUX] = useState(false)
   const [activeProject, setActiveProject] = useState(null)
 
+  const handleToggle = () => {
+    if (window._toggling) return
+    window._toggling = true
+
+    const uiSet = document.querySelector('.ui-set')
+    const uxSet = document.querySelector('.ux-set')
+    const currentSet = isUX ? uxSet : uiSet
+    const nextSet = isUX ? uiSet : uxSet
+    const currentCards = currentSet.querySelectorAll('.pcard')
+
+    // Stagger exit
+    currentCards.forEach((card, i) => {
+      card.style.animationDelay = `${i * 0.05}s`
+      card.classList.remove('card-enter')
+      card.classList.add('card-exit')
+    })
+
+    const totalExit = (currentCards.length - 1) * 50 + 450
+
+    setTimeout(() => {
+      // Hide current, show next
+      currentSet.classList.add('hidden')
+      nextSet.classList.remove('hidden')
+
+      // Switch mode
+      setIsUX(v => !v)
+
+      // Stagger enter
+      setTimeout(() => {
+        const nextCards = nextSet.querySelectorAll('.pcard')
+        nextCards.forEach((card, i) => {
+          card.classList.remove('card-exit')
+          card.style.animationDelay = `${i * 0.06}s`
+          card.classList.add('card-enter')
+          card.addEventListener('animationend', () => {
+            card.classList.remove('card-enter')
+            card.style.animationDelay = ''
+          }, { once: true })
+        })
+        setTimeout(() => { window._toggling = false }, nextCards.length * 60 + 500)
+      }, 50)
+    }, totalExit)
+  }
+
   // Apply body class for CSS toggle
   useEffect(() => {
     document.body.classList.toggle('ux-mode', isUX)
@@ -141,7 +185,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
           <li><a href="#about">About</a></li>
           <li><a href="mailto:hello@quinn.design">Contact</a></li>
         </ul>
-        <div className="toggle-wrap" onClick={() => setIsUX(v => !v)}>
+        <div className="toggle-wrap" onClick={handleToggle}>
           <span className={`t-opt ${!isUX ? 'active' : ''}`}>UI</span>
           <span className={`t-opt ${isUX ? 'active' : ''}`}>UX</span>
         </div>
@@ -185,7 +229,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
           <div className="cards-set ui-set">
             {ui.map((p, i) => <ProjectCard key={p._id} project={{...p, tall: i === 0}} index={i} onClick={setActiveProject} />)}
           </div>
-          <div className="cards-set ux-set">
+          <div className="cards-set ux-set hidden">
             {ux.map((p, i) => <ProjectCard key={p._id} project={{...p, tall: i === 0}} index={i} onClick={setActiveProject} />)}
           </div>
         </div>

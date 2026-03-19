@@ -67,7 +67,7 @@ export default function Gallery({ project, onClose }) {
               className={`gallery-slide ${i === index ? (exiting ? 'exit' : 'active') : ''}`}
             >
               {s.imageUrl ? (
-                <img src={s.imageUrl} alt={s.label || ''} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={s.imageUrl} alt={s.label || ''} style={{ width: '100%', height: '100%', objectFit: 'contain', background: 'var(--surface)' }} />
               ) : (
                 <div className="gallery-slide-placeholder" style={{ background: gradients[i % gradients.length] }}>
                   <span>{s.label || '[ Preview ]'}</span>

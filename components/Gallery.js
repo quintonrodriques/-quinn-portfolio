@@ -95,13 +95,10 @@ export default function Gallery({ project, onClose }) {
                     src={s.imageUrl}
                     alt={s.label || ''}
                     style={{
-                      maxWidth: '100%',
-                      maxHeight: '100%',
-                      width: 'auto',
-                      height: 'auto',
+                      width: '100%',
+                      height: '100%',
                       objectFit: 'contain',
                       display: 'block',
-                      margin: '0 auto',
                     }}
                   />
                   <a

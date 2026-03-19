@@ -85,6 +85,14 @@ export default function Home({ uiProjects, uxProjects, about }) {
     document.body.classList.toggle('ux-mode', isUX)
   }, [isUX])
 
+  // Scrolled nav
+  useEffect(() => {
+    const nav = document.querySelector('nav')
+    const handler = () => nav.classList.toggle('scrolled', window.scrollY > 60)
+    window.addEventListener('scroll', handler)
+    return () => window.removeEventListener('scroll', handler)
+  }, [])
+
   // Scroll reveal
   useEffect(() => {
     const els = document.querySelectorAll('.r')
@@ -117,7 +125,16 @@ export default function Home({ uiProjects, uxProjects, about }) {
       <nav>
         <a href="#" className="nav-logo">
           <div className="logo-ring"><span>Q</span></div>
-          <span className="logo-name">Quinn</span>
+          <span className="logo-name">
+            <span className="logo-letter" style={{ transitionDelay: '0s' }}>Q</span>
+            <span className="logo-letter accent" style={{ transitionDelay: '0.05s' }}>U</span>
+            <span className="logo-letter-i accent" style={{ transitionDelay: '0.1s' }}>
+              <span className={`ll-i${isUX ? ' ll-hidden' : ''}`}>I</span>
+              <span className={`ll-x${isUX ? ' ll-visible' : ''}`}>X</span>
+            </span>
+            <span className="logo-letter" style={{ transitionDelay: '0.15s' }}>N</span>
+            <span className="logo-letter" style={{ transitionDelay: '0.2s' }}>N</span>
+          </span>
         </a>
         <ul className="nav-menu">
           <li><a href="#work">Work</a></li>
@@ -166,10 +183,10 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
         <div className="cards-wrap">
           <div className="cards-set ui-set">
-            {ui.map((p, i) => <ProjectCard key={p._id} project={p} index={i} onClick={setActiveProject} />)}
+            {ui.map((p, i) => <ProjectCard key={p._id} project={{...p, tall: i === 0}} index={i} onClick={setActiveProject} />)}
           </div>
           <div className="cards-set ux-set">
-            {ux.map((p, i) => <ProjectCard key={p._id} project={p} index={i} onClick={setActiveProject} />)}
+            {ux.map((p, i) => <ProjectCard key={p._id} project={{...p, tall: i === 0}} index={i} onClick={setActiveProject} />)}
           </div>
         </div>
       </section>

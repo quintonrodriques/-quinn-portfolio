@@ -37,7 +37,6 @@ export default function Gallery({ project, onClose }) {
   if (!project) return null
   const slide = slides[index]
 
-  // Placeholder gradient colors cycling
   const gradients = [
     'linear-gradient(135deg,#221D35,#312660)',
     'linear-gradient(135deg,#35201D,#602626)',
@@ -45,6 +44,30 @@ export default function Gallery({ project, onClose }) {
     'linear-gradient(135deg,#1D2835,#204060)',
     'linear-gradient(135deg,#2D2016,#4D3520)',
   ]
+
+  const fullscreenBtnStyle = {
+    position: 'absolute',
+    bottom: '12px',
+    right: '12px',
+    background: 'rgba(0,0,0,0.55)',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
+    border: '1px solid rgba(255,255,255,0.15)',
+    borderRadius: '8px',
+    padding: '7px 13px',
+    color: 'white',
+    fontSize: '11px',
+    fontFamily: "'Syne Mono', monospace",
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
+    textDecoration: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    zIndex: 10,
+    cursor: 'pointer',
+    transition: 'background 0.2s',
+  }
 
   return (
     <div className="gallery-overlay open" onClick={(e) => e.target.classList.contains('gallery-overlay') && onClose()}>
@@ -57,7 +80,7 @@ export default function Gallery({ project, onClose }) {
             </div>
             <div className="gallery-project-name">{project.title}</div>
           </div>
-          <button className="gallery-close" onClick={onClose}>✕</button>
+          <button className="gallery-close" onClick={onClose}>x</button>
         </div>
 
         <div className="gallery-stage">
@@ -67,7 +90,23 @@ export default function Gallery({ project, onClose }) {
               className={`gallery-slide ${i === index ? (exiting ? 'exit' : 'active') : ''}`}
             >
               {s.imageUrl ? (
-                <img src={s.imageUrl} alt={s.label || ''} style={{ width: '100%', height: '100%', objectFit: 'contain', background: 'var(--surface)' }} />
+                <>
+                  <img
+                    src={s.imageUrl}
+                    alt={s.label || ''}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                  <a
+                    href={s.imageUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={fullscreenBtnStyle}
+                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,0,0,0.85)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,0,0,0.55)'}
+                  >
+                    Full Size
+                  </a>
+                </>
               ) : (
                 <div className="gallery-slide-placeholder" style={{ background: gradients[i % gradients.length] }}>
                   <span>{s.label || '[ Preview ]'}</span>

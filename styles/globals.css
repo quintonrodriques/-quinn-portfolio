@@ -404,8 +404,8 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
   cursor: pointer; transition: background 0.2s, transform 0.2s;
 }
 .gallery-close:hover { background: var(--surface); transform: rotate(90deg); }
-.gallery-stage { position: relative; width: 100%; aspect-ratio: 16/10; border-radius: 12px; overflow: hidden; background: var(--surface); flex-shrink: 0; }
-.gallery-slide { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.76,0,0.24,1); transform: translateX(40px); }
+.gallery-stage { position: relative; width: 100%; min-height: 300px; max-height: 65vh; border-radius: 12px; overflow: hidden; background: var(--surface); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.gallery-slide { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.76,0,0.24,1); transform: translateX(40px); }
 .gallery-slide.active { opacity: 1; transform: none; }
 .gallery-slide.exit { opacity: 0; transform: translateX(-40px); }
 .gallery-slide img { width: 100%; height: 100%; object-fit: contain; background: var(--surface); }

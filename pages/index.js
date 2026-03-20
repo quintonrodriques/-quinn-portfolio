@@ -209,7 +209,6 @@ export default function Home({ uiProjects, uxProjects, about }) {
       {/* NAV */}
       <nav>
         <a href="#" className="nav-logo">
-          <div className="logo-ring"><span>Q</span></div>
           <span className="logo-name">
             <span className="logo-letter" style={{ transitionDelay: '0s' }}>Q</span>
             <span className="logo-letter accent" style={{ transitionDelay: '0.05s' }}>U</span>

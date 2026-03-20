@@ -139,7 +139,7 @@ body.ux-mode .logo-letter.accent { color: var(--ux-accent); }
   color: var(--ui-accent);
   transition: color 0.6s ease, width 0.5s cubic-bezier(0.76,0,0.24,1) 0.25s;
 }
-body.ux-mode .logo-letter-i { color: var(--ux-accent); width: calc(0.78em + 5px); }
+body.ux-mode .logo-letter-i { color: var(--ux-accent); width: calc(0.78em + 3px); }
 
 .ll-i, .ll-x {
   display: inline-block;

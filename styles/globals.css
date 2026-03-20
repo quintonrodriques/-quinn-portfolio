@@ -548,7 +548,7 @@ footer {
 @media (max-width: 900px) {
   nav { padding: 20px 24px; }
   .nav-menu { display: none; }
-  .hero { padding: 120px 24px 60px; }
+  .hero { padding: 72px 24px 60px; }
   .hero-title { font-size: clamp(48px, 12vw, 80px); }
   .projects-section, .about-section { padding: 60px 24px; }
   .cards-set { grid-template-columns: 1fr; }

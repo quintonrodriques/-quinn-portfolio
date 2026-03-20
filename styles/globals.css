@@ -405,16 +405,20 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   display: flex; align-items: center; justify-content: center;
   opacity: 0; pointer-events: none;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.5s ease;
 }
 .gallery-overlay.open { opacity: 1; pointer-events: all; }
 .gallery-modal {
   width: 95vw; max-width: 1400px; max-height: 95vh;
   display: flex; flex-direction: column;
-  transform: translateY(24px) scale(0.97);
-  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  opacity: 0;
+  transform: translateY(32px) scale(0.96);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
 }
-.gallery-overlay.open .gallery-modal { transform: none; }
+.gallery-overlay.open .gallery-modal {
+  opacity: 1;
+  transform: none;
+}
 .gallery-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .gallery-project-name { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; font-style: italic; color: var(--text); letter-spacing: -0.01em; }
 .gallery-meta { display: flex; align-items: center; gap: 16px; }

@@ -318,8 +318,8 @@ export default function Home({ uiProjects, uxProjects, about }) {
               <span className={`ll-i${isUX ? ' ll-hidden' : ''}`}>I</span>
               <span className={`ll-x${isUX ? ' ll-visible' : ''}`}>X</span>
             </span>
-            <span className="logo-letter" style={{ transitionDelay: '0.15s' }}>N</span>
-            <span className="logo-letter" style={{ transitionDelay: '0.2s' }}>N</span>
+            <span className="logo-letter nn" style={{ transitionDelay: '0.15s' }}>N</span>
+            <span className="logo-letter nn" style={{ transitionDelay: '0.2s', marginLeft: '3px' }}>N</span>
           </span>
         </a>
         <ul className="nav-menu">

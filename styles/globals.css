@@ -233,7 +233,8 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
 .hw-5 { animation-delay: 1.5s; }
 .hero-row {
   display: flex; align-items: flex-end; justify-content: space-between;
-  animation: fadeSlide 1s ease 0.4s both;
+  opacity: 0;
+  animation: fadeSlide 0.9s ease 4.2s both;
 }
 .hero-desc { max-width: 360px; font-size: 15px; line-height: 1.7; color: var(--muted); font-weight: 400; }
 .hero-scroll { display: flex; flex-direction: column; align-items: center; gap: 12px; color: var(--muted); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; }

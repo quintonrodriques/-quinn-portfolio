@@ -204,11 +204,32 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
   font-size: clamp(70px, 11vw, 160px); font-weight: 300;
   line-height: 0.9; letter-spacing: -0.03em;
   max-width: 1000px; margin-bottom: 52px;
-  animation: fadeSlide 1s ease 0.25s both;
 }
 .hero-title .line-em { font-style: italic; color: var(--accent); transition: color var(--transition); display: block; }
-.hero-title .line-outline { -webkit-text-stroke: 1px var(--text); color: transparent; opacity: 0.3; }
+.hero-title .line-outline { -webkit-text-stroke: 1px var(--text); color: transparent; }
 .hero-inline-row { display: flex; gap: 0.2em; }
+
+/* Hero word stagger */
+.hw {
+  display: inline-block;
+  opacity: 0;
+  animation: hwIn 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+  will-change: transform, opacity;
+}
+@keyframes hwIn {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0px); }
+}
+.hw.outline-word { animation-name: hwInOutline; }
+@keyframes hwInOutline {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 0.3; transform: translateY(0px); }
+}
+.hw-1 { animation-delay: 0.1s; }
+.hw-2 { animation-delay: 0.8s; }
+.hw-3 { animation-delay: 1.5s; }
+.hw-4 { animation-delay: 2.2s; }
+.hw-5 { animation-delay: 1.5s; }
 .hero-row {
   display: flex; align-items: flex-end; justify-content: space-between;
   animation: fadeSlide 1s ease 0.4s both;

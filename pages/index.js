@@ -140,12 +140,42 @@ export default function Home({ uiProjects, uxProjects, about }) {
     document.body.classList.toggle('ux-mode', isUX)
   }, [isUX])
 
-  // Scrolled nav
+  // Scrolled nav + per-word parallax
   useEffect(() => {
     const nav = document.querySelector('nav')
-    const handler = () => nav.classList.toggle('scrolled', window.scrollY > 60)
-    window.addEventListener('scroll', handler)
-    return () => window.removeEventListener('scroll', handler)
+
+    const wordRates = {
+      'hw-1': 0.35,
+      'hw-2': 0.55,
+      'hw-3': 0.20,
+      'hw-4': 0.45,
+      'hw-5': 0.15,
+    }
+
+    // Wait for entrance animations to finish before parallax takes over
+    const lastDelay = 2900 + 900
+    const timer = setTimeout(() => {
+      document.querySelectorAll('.hw').forEach(word => {
+        word.style.animation = 'none'
+        word.style.opacity = word.classList.contains('outline-word') ? '0.3' : '1'
+        word.style.transform = 'translateY(0px)'
+      })
+    }, lastDelay)
+
+    const handler = () => {
+      const scrollY = window.scrollY
+      nav.classList.toggle('scrolled', scrollY > 60)
+      Object.entries(wordRates).forEach(([cls, rate]) => {
+        const el = document.querySelector(`.${cls}`)
+        if (el) el.style.transform = `translateY(${scrollY * -rate}px)`
+      })
+    }
+
+    window.addEventListener('scroll', handler, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', handler)
+      clearTimeout(timer)
+    }
   }, [])
 
   // Scroll reveal
@@ -209,11 +239,11 @@ export default function Home({ uiProjects, uxProjects, about }) {
           <span className="hero-tag-text">{bio.availability || 'Available for Projects — 2026'}</span>
         </div>
         <h1 className="hero-title">
-          Organic solutions<br />
-          <span className="line-em">through</span>
+          <span className="hw hw-1">Organic</span> <span className="hw hw-4">solutions</span><br />
+          <span className="line-em"><span className="hw hw-5">through</span></span>
           <span className="hero-inline-row">
-            <span className="line-outline">digital</span>
-            <span className="line-outline">interfaces.</span>
+            <span className="line-outline"><span className="hw hw-3 outline-word">digital</span></span>
+            <span className="line-outline"><span className="hw hw-2 outline-word">interfaces.</span></span>
           </span>
         </h1>
         <div className="hero-row">

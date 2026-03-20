@@ -566,7 +566,9 @@ footer {
   .gallery-blurb-meta { flex-direction: row; flex-wrap: wrap; gap: 16px; order: -1; }
   .gallery-blurb-tag { flex-direction: row; align-items: center; gap: 6px; }
 
-  /* On mobile: hide caption inside bottombar, show it below stage instead */
+  /* Projects header — stacked on mobile */
+  .projects-header { flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 40px; }
+  .projects-title { white-space: nowrap; font-size: 42px; }
   .gallery-caption-desktop { display: none; }
   .gallery-caption-text-mobile { display: block !important; }
 }

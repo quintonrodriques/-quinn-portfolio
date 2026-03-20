@@ -51,6 +51,13 @@ export default {
       type: 'url',
     },
     {
+      name: 'isStatic',
+      title: 'Static Card (No Interaction)',
+      description: 'If enabled, clicking this card does nothing — no gallery, no external link',
+      type: 'boolean',
+      initialValue: false,
+    },
+    {
       name: 'blurb',
       title: 'Project Overview',
       description: 'Full written description shown when "Overview" is clicked in the gallery',

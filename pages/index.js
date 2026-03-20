@@ -55,6 +55,7 @@ function ProjectCard({ project, index, onClick }) {
   const gradient = gradients[index % gradients.length]
 
   const handleClick = () => {
+    if (project.isStatic) return
     if (project.externalUrl) {
       window.open(project.externalUrl, '_blank', 'noopener noreferrer')
     } else {
@@ -63,7 +64,7 @@ function ProjectCard({ project, index, onClick }) {
   }
 
   return (
-    <div className={`pcard r ${project.tall ? 'tall' : ''}`} onClick={handleClick}>
+    <div className={`pcard r ${project.tall ? 'tall' : ''}`} onClick={handleClick} style={project.isStatic ? { cursor: 'default' } : {}}>
       <div className="pcard-img">
         <div className="pcard-img-inner">
           {bg

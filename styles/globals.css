@@ -122,8 +122,10 @@ body.ux-mode nav.scrolled {
 .logo-letter.q { margin-right: 3px; }
 
 /* NN slide right when X is active — fires immediately */
-.logo-letter.nn { transform: translateX(0); margin-left: 3px; transition: color 0.6s ease, transform 0.5s cubic-bezier(0.76,0,0.24,1) 0s; }
-body.ux-mode .logo-letter.nn { transform: translateX(0.25em); }
+.logo-letter.nn { transform: translateX(0); margin-left: 0.5px; transition: color 0.6s ease, transform 0.5s cubic-bezier(0.76,0,0.24,1) 0s; }
+.logo-letter.nn + .logo-letter.nn { margin-left: 3.5px; }
+body.ux-mode .logo-letter.nn { transform: translateX(0.25em); margin-left: -0.5px; }
+body.ux-mode .logo-letter.nn + .logo-letter.nn { margin-left: 1.5px; }
 
 /* UI/UX letters get accent color */
 .logo-letter.accent { color: var(--ui-accent); transition: color 0.6s ease; margin-right: 3px; }

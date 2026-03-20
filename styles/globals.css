@@ -201,7 +201,7 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
 .hero-tag-text { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
 .hero-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(42px, 9vw, 160px); font-weight: 300;
+  font-size: clamp(56px, 10vw, 160px); font-weight: 300;
   line-height: 0.9; letter-spacing: -0.03em;
   max-width: 1000px; margin-bottom: 52px;
 }
@@ -471,6 +471,7 @@ footer {
   nav { padding: 20px 24px; }
   .nav-menu { display: none; }
   .hero { padding: 120px 24px 60px; }
+  .hero-title { font-size: clamp(48px, 12vw, 80px); }
   .projects-section, .about-section { padding: 60px 24px; }
   .cards-set { grid-template-columns: 1fr; }
   .about-inner { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }

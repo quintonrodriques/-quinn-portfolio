@@ -100,6 +100,17 @@ export default function Gallery({ project, onClose }) {
           ))}
         </div>
 
+        {/* Caption text below stage on mobile */}
+        {slide?.caption && captionVisible && (
+          <div className="gallery-caption-text-mobile visible" style={{
+            display: 'none',
+            fontSize: '13px', lineHeight: '1.6', color: 'var(--muted)',
+            fontStyle: 'italic', marginTop: '12px', width: '100%'
+          }}>
+            {slide.caption}
+          </div>
+        )}
+
         <div className="gallery-bottombar">
           <div className="gallery-nav">
             <button className="gallery-btn" onClick={() => changeSlide(-1)} disabled={index === 0}>←</button>
@@ -113,7 +124,7 @@ export default function Gallery({ project, onClose }) {
                 <button className="gallery-caption-toggle" onClick={() => setCaptionVisible(v => !v)}>
                   {captionVisible ? 'Hide Caption' : 'Show Caption'}
                 </button>
-                <div className={`gallery-caption-text ${captionVisible ? 'visible' : ''}`}>
+                <div className={`gallery-caption-text gallery-caption-desktop ${captionVisible ? 'visible' : ''}`}>
                   {slide.caption}
                 </div>
               </>

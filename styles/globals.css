@@ -557,11 +557,16 @@ footer {
   .about-inner { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }
   footer { padding: 30px 24px; flex-direction: column; gap: 20px; }
 
-  /* Gallery — wider, scrollable overview, full-width caption above controls */
+  /* Gallery — wider, scrollable overview */
   .gallery-modal { width: 98vw; max-height: 98vh; overflow-y: auto; }
   .gallery-blurb-panel.visible { max-height: none; overflow-y: visible; }
   .gallery-blurb-inner { grid-template-columns: 1fr; gap: 16px; }
-  .gallery-bottombar { flex-wrap: wrap; }
-  .gallery-caption-wrap { order: -1; width: 100%; text-align: left; flex: none; }
-  .gallery-caption-text.visible { max-height: none; }
+
+  /* Meta tags horizontal row above blurb text */
+  .gallery-blurb-meta { flex-direction: row; flex-wrap: wrap; gap: 16px; order: -1; }
+  .gallery-blurb-tag { flex-direction: row; align-items: center; gap: 6px; }
+
+  /* On mobile: hide caption inside bottombar, show it below stage instead */
+  .gallery-caption-desktop { display: none; }
+  .gallery-caption-text-mobile { display: block !important; }
 }

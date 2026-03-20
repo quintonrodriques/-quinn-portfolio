@@ -228,8 +228,8 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
 }
 .hw-1 { animation-delay: 0.1s; }
 .hw-2 { animation-delay: 0.8s; }
-.hw-3 { animation-delay: 1.5s; }
-.hw-4 { animation-delay: 2.2s; }
+.hw-3 { animation-delay: 1.8s; }
+.hw-4 { animation-delay: 2.3s; }
 .hw-5 { animation-delay: 1.5s; }
 .hero-row {
   display: flex; align-items: flex-end; justify-content: space-between;
@@ -258,6 +258,14 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
 .projects-section { padding: 100px 52px; position: relative; z-index: 1; }
 .projects-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 60px; }
 .projects-title { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 300; font-style: italic; letter-spacing: -0.01em; }
+.projects-title .tl {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.projects-title .tl.in { opacity: 1; transform: translateX(0); }
+.projects-title .tl-space { display: inline-block; width: 0.28em; }
 .mode-indicator {
   display: flex; align-items: center; gap: 10px;
   font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;

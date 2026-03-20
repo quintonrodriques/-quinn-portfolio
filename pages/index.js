@@ -140,6 +140,61 @@ export default function Home({ uiProjects, uxProjects, about }) {
     document.body.classList.toggle('ux-mode', isUX)
   }, [isUX])
 
+  // "Selected Work" letter cascade + counter
+  useEffect(() => {
+    const titleEl = document.getElementById('selectedWorkTitle')
+    if (!titleEl) return
+    const text = 'Selected Work'
+    titleEl.innerHTML = text.split('').map((ch, i) =>
+      ch === ' '
+        ? '<span class="tl-space"> </span>'
+        : `<span class="tl" style="transition-delay:${i * 0.04}s">${ch}</span>`
+    ).join('')
+
+    function animateCount(target, duration) {
+      const el = document.getElementById('projectCount')
+      if (!el) return
+      const start = performance.now()
+      function step(now) {
+        const p = Math.min((now - start) / duration, 1)
+        const ease = 1 - Math.pow(1 - p, 3)
+        el.textContent = String(Math.round(target * ease)).padStart(2, '0')
+        if (p < 1) requestAnimationFrame(step)
+      }
+      requestAnimationFrame(step)
+    }
+
+    let hasAnimated = false
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !hasAnimated) {
+          hasAnimated = true
+          titleEl.querySelectorAll('.tl').forEach(l => l.classList.add('in'))
+          animateCount(isUX ? ux.length : ui.length, 1200)
+        }
+      })
+    }, { threshold: 0.3 })
+
+    const header = document.getElementById('projectsHeader')
+    if (header) obs.observe(header)
+    return () => obs.disconnect()
+  }, [])
+
+  // Recount on toggle
+  useEffect(() => {
+    const el = document.getElementById('projectCount')
+    if (!el) return
+    const target = isUX ? ux.length : ui.length
+    const start = performance.now()
+    function step(now) {
+      const p = Math.min((now - start) / 800, 1)
+      const ease = 1 - Math.pow(1 - p, 3)
+      el.textContent = String(Math.round(target * ease)).padStart(2, '0')
+      if (p < 1) requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+  }, [isUX])
+
   // Scrolled nav + per-word parallax
   useEffect(() => {
     const nav = document.querySelector('nav')
@@ -153,7 +208,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
     }
 
     // Wait for entrance animations to finish before parallax takes over
-    const lastDelay = 2900 + 900
+    const lastDelay = 2300 + 900
     const timer = setTimeout(() => {
       document.querySelectorAll('.hw').forEach(word => {
         word.style.animation = 'none'
@@ -258,10 +313,12 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
       {/* PROJECTS */}
       <section className="projects-section" id="work">
-        <div className="projects-header r">
-          <h2 className="projects-title">Selected Work</h2>
-          <div className="mode-indicator">
-            {isUX ? `UX Design — ${ux.length.toString().padStart(2, '0')} Projects` : `UI Design — ${ui.length.toString().padStart(2, '0')} Projects`}
+        <div className="projects-header r" id="projectsHeader">
+          <h2 className="projects-title" id="selectedWorkTitle"></h2>
+          <div className="mode-indicator" id="modeIndicator">
+            {isUX ? 'UX Design — ' : 'UI Design — '}
+            <span id="projectCount">{isUX ? String(ux.length).padStart(2,'0') : String(ui.length).padStart(2,'0')}</span>
+            {' Projects'}
           </div>
         </div>
 

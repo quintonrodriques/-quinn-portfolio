@@ -79,7 +79,7 @@ export default function Gallery({ project, onClose }) {
           <button className="gallery-close" onClick={onClose}>✕</button>
         </div>
 
-        <div className="gallery-stage">
+        <div className={`gallery-stage${blurbVisible && window.innerWidth < 768 ? ' contracted' : ''}`}>
           {slides.map((s, i) => (
             <div key={i} className={`gallery-slide ${i === index ? (exiting ? 'exit' : 'active') : ''}`}>
               {s.imageUrl ? (

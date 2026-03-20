@@ -141,11 +141,11 @@ export default function Home({ uiProjects, uxProjects, about }) {
     document.body.classList.toggle('ux-mode', isUX)
   }, [isUX])
 
-  // "Selected Work" letter cascade + counter
+  // "Featured Projects" letter cascade + counter
   useEffect(() => {
     const titleEl = document.getElementById('selectedWorkTitle')
     if (!titleEl) return
-    const text = 'Selected Work'
+    const text = 'Featured Projects'
     titleEl.innerHTML = text.split('').map((ch, i) =>
       ch === ' '
         ? '<span class="tl-space"> </span>'

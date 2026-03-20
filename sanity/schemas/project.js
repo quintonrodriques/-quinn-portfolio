@@ -51,6 +51,31 @@ export default {
       type: 'url',
     },
     {
+      name: 'blurb',
+      title: 'Project Overview',
+      description: 'Full written description shown when "Overview" is clicked in the gallery',
+      type: 'text',
+      rows: 5,
+    },
+    {
+      name: 'role',
+      title: 'Your Role',
+      description: 'e.g. Lead UX Designer',
+      type: 'string',
+    },
+    {
+      name: 'duration',
+      title: 'Duration',
+      description: 'e.g. 3 months',
+      type: 'string',
+    },
+    {
+      name: 'platform',
+      title: 'Platform',
+      description: 'e.g. iOS & Android, Web App',
+      type: 'string',
+    },
+    {
       name: 'thumbnail',
       title: 'Thumbnail Image',
       description: 'Main image shown on the project card',

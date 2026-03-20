@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 export default function Gallery({ project, onClose }) {
   const [index, setIndex] = useState(0)
   const [captionVisible, setCaptionVisible] = useState(false)
+  const [blurbVisible, setBlurbVisible] = useState(false)
   const [exiting, setExiting] = useState(false)
 
   const slides = project?.slides || []
@@ -34,6 +35,13 @@ export default function Gallery({ project, onClose }) {
     return () => { document.body.style.overflow = '' }
   }, [])
 
+  // Reset blurb when project changes
+  useEffect(() => {
+    setBlurbVisible(false)
+    setCaptionVisible(false)
+    setIndex(0)
+  }, [project])
+
   if (!project) return null
   const slide = slides[index]
 
@@ -46,27 +54,15 @@ export default function Gallery({ project, onClose }) {
   ]
 
   const fullscreenBtnStyle = {
-    position: 'absolute',
-    bottom: '12px',
-    right: '12px',
-    background: 'rgba(0,0,0,0.55)',
-    backdropFilter: 'blur(8px)',
+    position: 'absolute', bottom: '12px', right: '12px',
+    background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(8px)',
     WebkitBackdropFilter: 'blur(8px)',
     border: '1px solid rgba(255,255,255,0.15)',
-    borderRadius: '8px',
-    padding: '7px 13px',
-    color: 'white',
-    fontSize: '11px',
-    fontFamily: "'Syne Mono', monospace",
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase',
-    textDecoration: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    zIndex: 10,
-    cursor: 'pointer',
-    transition: 'background 0.2s',
+    borderRadius: '8px', padding: '7px 13px', color: 'white',
+    fontSize: '11px', fontFamily: "'Syne Mono', monospace",
+    letterSpacing: '0.12em', textTransform: 'uppercase',
+    textDecoration: 'none', display: 'flex', alignItems: 'center',
+    gap: '6px', zIndex: 10, cursor: 'pointer', transition: 'background 0.2s',
   }
 
   return (
@@ -80,35 +76,18 @@ export default function Gallery({ project, onClose }) {
             </div>
             <div className="gallery-project-name">{project.title}</div>
           </div>
-          <button className="gallery-close" onClick={onClose}>x</button>
+          <button className="gallery-close" onClick={onClose}>✕</button>
         </div>
 
         <div className="gallery-stage">
           {slides.map((s, i) => (
-            <div
-              key={i}
-              className={`gallery-slide ${i === index ? (exiting ? 'exit' : 'active') : ''}`}
-            >
+            <div key={i} className={`gallery-slide ${i === index ? (exiting ? 'exit' : 'active') : ''}`}>
               {s.imageUrl ? (
                 <>
-                  <img
-                    src={s.imageUrl}
-                    alt={s.label || ''}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain',
-                      display: 'block',
-                    }}
-                  />
-                  <a
-                    href={s.imageUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={fullscreenBtnStyle}
+                  <img src={s.imageUrl} alt={s.label || ''} style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} />
+                  <a href={s.imageUrl} target="_blank" rel="noopener noreferrer" style={fullscreenBtnStyle}
                     onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,0,0,0.85)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,0,0,0.55)'}
-                  >
+                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,0,0,0.55)'}>
                     Full Size
                   </a>
                 </>
@@ -141,12 +120,48 @@ export default function Gallery({ project, onClose }) {
             )}
           </div>
 
-          <div className="gallery-dots">
-            {slides.map((_, i) => (
-              <button key={i} className={`gallery-dot ${i === index ? 'active' : ''}`} onClick={() => { setIndex(i); setCaptionVisible(false) }} />
-            ))}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {project.blurb && (
+              <button className={`gallery-blurb-btn ${blurbVisible ? 'open' : ''}`} onClick={() => setBlurbVisible(v => !v)}>
+                <span className="btn-icon">+</span> Overview
+              </button>
+            )}
+            <div className="gallery-dots">
+              {slides.map((_, i) => (
+                <button key={i} className={`gallery-dot ${i === index ? 'active' : ''}`} onClick={() => { setIndex(i); setCaptionVisible(false) }} />
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* Blurb panel */}
+        {project.blurb && (
+          <div className={`gallery-blurb-panel ${blurbVisible ? 'visible' : ''}`}>
+            <div className="gallery-blurb-inner">
+              <p className="gallery-blurb-text">{project.blurb}</p>
+              <div className="gallery-blurb-meta">
+                {project.role && (
+                  <div className="gallery-blurb-tag">
+                    <span className="gallery-blurb-tag-label">Role</span>
+                    <span className="gallery-blurb-tag-value">{project.role}</span>
+                  </div>
+                )}
+                {project.duration && (
+                  <div className="gallery-blurb-tag">
+                    <span className="gallery-blurb-tag-label">Duration</span>
+                    <span className="gallery-blurb-tag-value">{project.duration}</span>
+                  </div>
+                )}
+                {project.platform && (
+                  <div className="gallery-blurb-tag">
+                    <span className="gallery-blurb-tag-label">Platform</span>
+                    <span className="gallery-blurb-tag-value">{project.platform}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

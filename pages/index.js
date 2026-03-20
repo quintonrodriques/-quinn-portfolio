@@ -98,9 +98,17 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
     const uiSet = document.querySelector('.ui-set')
     const uxSet = document.querySelector('.ux-set')
+    const cardsWrap = document.querySelector('.cards-wrap')
     const currentSet = isUX ? uxSet : uiSet
     const nextSet = isUX ? uiSet : uxSet
     const currentCards = currentSet.querySelectorAll('.pcard')
+
+    // Lock current height to prevent jump
+    if (cardsWrap) {
+      cardsWrap.style.height = cardsWrap.offsetHeight + 'px'
+      cardsWrap.style.transition = 'height 0.6s cubic-bezier(0.76,0,0.24,1)'
+      cardsWrap.style.overflow = 'hidden'
+    }
 
     // Stagger exit
     currentCards.forEach((card, i) => {
@@ -119,6 +127,12 @@ export default function Home({ uiProjects, uxProjects, about }) {
       // Switch mode
       setIsUX(v => !v)
 
+      // Animate to new height
+      if (cardsWrap) {
+        const newHeight = nextSet.offsetHeight
+        cardsWrap.style.height = newHeight + 'px'
+      }
+
       // Stagger enter
       setTimeout(() => {
         const nextCards = nextSet.querySelectorAll('.pcard')
@@ -131,7 +145,16 @@ export default function Home({ uiProjects, uxProjects, about }) {
             card.style.animationDelay = ''
           }, { once: true })
         })
-        setTimeout(() => { window._toggling = false }, nextCards.length * 60 + 500)
+
+        // Release height lock after animation
+        setTimeout(() => {
+          if (cardsWrap) {
+            cardsWrap.style.height = ''
+            cardsWrap.style.transition = ''
+            cardsWrap.style.overflow = ''
+          }
+          window._toggling = false
+        }, nextCards.length * 60 + 500)
       }, 50)
     }, totalExit)
   }

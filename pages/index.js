@@ -224,12 +224,35 @@ export default function Home({ uiProjects, uxProjects, about }) {
         const el = document.querySelector(`.${cls}`)
         if (el) el.style.transform = `translateY(${scrollY * -rate}px)`
       })
+
+      // About section parallax
+      const aboutInner = document.getElementById('aboutInner')
+      if (aboutInner) {
+        const rect = aboutInner.getBoundingClientRect()
+        const offset = (window.innerHeight - rect.top) * 0.06
+        aboutInner.style.transform = `translateY(${Math.min(offset * -1, 0) + 30}px)`
+      }
     }
+
+    // Skill items float observer
+    const skillObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          document.querySelectorAll('.skill-item.si').forEach((item, i) => {
+            setTimeout(() => item.classList.add('si-in'), i * 180)
+          })
+          skillObs.disconnect()
+        }
+      })
+    }, { threshold: 0.2 })
+    const skillEl = document.getElementById('skillItems')
+    if (skillEl) skillObs.observe(skillEl)
 
     window.addEventListener('scroll', handler, { passive: true })
     return () => {
       window.removeEventListener('scroll', handler)
       clearTimeout(timer)
+      skillObs.disconnect()
     }
   }, [])
 
@@ -330,11 +353,16 @@ export default function Home({ uiProjects, uxProjects, about }) {
             {ux.map((p, i) => <ProjectCard key={p._id} project={{...p, tall: i === 0}} index={i} onClick={setActiveProject} />)}
           </div>
         </div>
+        <div style={{ textAlign: 'center' }}>
+          <button className="view-toggle-btn" id="viewToggleBtn" onClick={handleToggle}>
+            {isUX ? 'View UI Projects' : 'View UX Projects'}
+          </button>
+        </div>
       </section>
 
       {/* ABOUT */}
       <section className="about-section" id="about">
-        <div className="about-inner r">
+        <div className="about-inner r" id="aboutInner">
           <div className="about-left">
             <div className="about-tag">
               <div className="about-tag-line" />
@@ -349,9 +377,9 @@ export default function Home({ uiProjects, uxProjects, about }) {
             <a href="mailto:hello@quinn.design" className="contact-link">Start a Conversation</a>
           </div>
           <div className="about-right">
-            <div className="skill-items">
+            <div className="skill-items" id="skillItems">
               {(bio.skills || FALLBACK_ABOUT.skills).map((s, i) => (
-                <div className="skill-item" key={i}>
+                <div className="skill-item si" key={i}>
                   <div className="skill-icon" />
                   <span className="skill-name">{s.name}</span>
                   <span className="skill-note">{s.years}</span>

@@ -399,12 +399,45 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
   padding: 16px 20px; border-radius: 10px;
   background: var(--bg); border: 1px solid var(--border);
   transition: background var(--transition), border-color var(--transition), transform 0.2s;
+  opacity: 0;
+  transform: translateY(120px);
 }
-.skill-item:hover { transform: translateX(8px); border-color: var(--accent); }
+.skill-item.si-in {
+  animation: siFloat 1.4s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+@keyframes siFloat {
+  0%   { opacity: 0; transform: translateY(120px); }
+  40%  { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.skill-item.si-in:hover { transform: translateX(8px) !important; border-color: var(--accent); }
 .skill-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--accent); opacity: 0.15; flex-shrink: 0; transition: opacity 0.3s, background var(--transition); }
 .skill-item:hover .skill-icon { opacity: 0.3; }
 .skill-name { font-size: 15px; font-weight: 600; flex: 1; }
 .skill-note { font-family: 'Syne Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.1em; }
+
+/* View toggle button */
+.view-toggle-btn {
+  display: flex; align-items: center; gap: 12px;
+  margin: 60px auto 0;
+  padding: 16px 36px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.3s, background 0.3s, color 0.3s, gap 0.3s;
+}
+.view-toggle-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--bg);
+  gap: 20px;
+}
+.view-toggle-btn::after { content: '→'; font-size: 16px; }
 
 /* GALLERY LIGHTBOX */
 .gallery-overlay {

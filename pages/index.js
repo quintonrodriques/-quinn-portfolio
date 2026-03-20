@@ -210,7 +210,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
       <nav>
         <a href="#" className="nav-logo">
           <span className="logo-name">
-            <span className="logo-letter" style={{ transitionDelay: '0s' }}>Q</span>
+            <span className="logo-letter q" style={{ transitionDelay: '0s' }}>Q</span>
             <span className="logo-letter accent" style={{ transitionDelay: '0.05s' }}>U</span>
             <span className="logo-letter-i accent" style={{ transitionDelay: '0.1s' }}>
               <span className={`ll-i${isUX ? ' ll-hidden' : ''}`}>I</span>
@@ -285,8 +285,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
             </div>
             <h2 className="about-heading">
               Shaping<br />
-              <em>ideas</em><br />
-              into form.
+              <em>ideas</em> into form.
             </h2>
             <p className="about-text-body">{bio.bio}</p>
             {bio.bio2 && <p className="about-text-body">{bio.bio2}</p>}

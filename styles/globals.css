@@ -556,4 +556,12 @@ footer {
   .cards-set { grid-template-columns: 1fr; }
   .about-inner { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }
   footer { padding: 30px 24px; flex-direction: column; gap: 20px; }
+
+  /* Gallery — wider, scrollable overview, full-width caption above controls */
+  .gallery-modal { width: 98vw; max-height: 98vh; overflow-y: auto; }
+  .gallery-blurb-panel.visible { max-height: none; overflow-y: visible; }
+  .gallery-blurb-inner { grid-template-columns: 1fr; gap: 16px; }
+  .gallery-bottombar { flex-wrap: wrap; }
+  .gallery-caption-wrap { order: -1; width: 100%; text-align: left; flex: none; }
+  .gallery-caption-text.visible { max-height: none; }
 }

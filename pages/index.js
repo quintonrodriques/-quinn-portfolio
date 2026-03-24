@@ -356,7 +356,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
           <li><a href="#about">About</a></li>
           <li><a href="mailto:hello@quinn.design">Contact</a></li>
         </ul>
-        <div className="toggle-wrap" onClick={handleToggle}>
+        <div className={`toggle-wrap ${isUX ? 'ux-active' : ''}`} onClick={handleToggle}>
           <span className={`t-opt ${!isUX ? 'active' : ''}`}>UI</span>
           <span className={`t-opt ${isUX ? 'active' : ''}`}>UX</span>
         </div>

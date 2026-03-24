@@ -200,22 +200,38 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
 
 /* TOGGLE */
 .toggle-wrap {
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 40px;
-  padding: 6px 6px 6px 16px;
+  padding: 4px;
   transition: background var(--transition), border-color var(--transition);
   cursor: pointer;
+  position: relative;
+}
+.toggle-wrap::before {
+  content: '';
+  position: absolute;
+  top: 4px; left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  border-radius: 20px;
+  background: var(--accent);
+  transition: transform 0.4s cubic-bezier(0.76,0,0.24,1), background var(--transition);
+}
+.toggle-wrap.ux-active::before {
+  transform: translateX(100%);
 }
 .t-opt {
   font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
   padding: 4px 10px; border-radius: 20px;
   color: var(--muted);
-  transition: color 0.4s, background 0.4s;
+  transition: color 0.4s;
   cursor: pointer;
+  position: relative; z-index: 1;
+  flex: 1; text-align: center;
 }
-.t-opt.active { background: var(--accent); color: var(--bg); }
+.t-opt.active { color: var(--bg); }
 
 /* HERO */
 .hero {

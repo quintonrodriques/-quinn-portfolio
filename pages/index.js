@@ -223,6 +223,16 @@ export default function Home({ uiProjects, uxProjects, about }) {
   useEffect(() => {
     const nav = document.querySelector('nav')
 
+    // Position nav directly below banner
+    const positionNav = () => {
+      const banner = document.getElementById('disclaimerBanner')
+      if (banner && !banner.classList.contains('dismissed')) {
+        nav.style.top = banner.offsetHeight + 'px'
+      }
+    }
+    positionNav()
+    window.addEventListener('resize', positionNav)
+
     const wordRates = {
       'hw-1': 0.35,
       'hw-2': 0.55,
@@ -275,6 +285,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
     window.addEventListener('scroll', handler, { passive: true })
     return () => {
       window.removeEventListener('scroll', handler)
+      window.removeEventListener('resize', positionNav)
       clearTimeout(timer)
       skillObs.disconnect()
     }

@@ -590,7 +590,7 @@ footer {
 @keyframes revealFallback { to { opacity: 1; transform: none; } }
 
 @media (max-width: 900px) {
-  nav { padding: 20px 24px; top: 52px; }
+  nav { padding: 20px 24px; top: 0; }
   .nav-menu { display: none; }
   .hero { padding: 110px 24px 60px; }
   .disclaimer-banner { padding: 8px 48px 8px 16px; gap: 8px; }

@@ -106,6 +106,10 @@ body::after {
   transition: color 0.2s; line-height: 1;
 }
 .disclaimer-close:hover { color: var(--text); }
+.disclaimer-banner.dismissed {
+  opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0;
+  border-bottom: none; pointer-events: none;
+}
 nav {
   position: fixed; top: 42px; left: 0; right: 0;
   z-index: 500;

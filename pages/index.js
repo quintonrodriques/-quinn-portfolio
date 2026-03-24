@@ -313,10 +313,16 @@ export default function Home({ uiProjects, uxProjects, about }) {
         <p className="disclaimer-text">A selection of my recent work is shown here. Proprietary projects from confidential engagements are available to view upon request.</p>
         <a href="mailto:hello@quinn.design" className="disclaimer-btn">Connect</a>
         <button className="disclaimer-close" onClick={() => {
-          document.getElementById('disclaimerBanner').classList.add('dismissed')
+          const banner = document.getElementById('disclaimerBanner')
           const nav = document.querySelector('nav')
+          const hero = document.querySelector('.hero')
+          banner.classList.add('dismissed')
           nav.style.transition = 'top 0.4s ease, background 0.4s ease, backdrop-filter 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease'
           nav.style.top = '0px'
+          if (hero) {
+            hero.style.transition = 'padding 0.4s ease'
+            hero.style.paddingTop = window.innerWidth < 900 ? '72px' : '140px'
+          }
         }}>✕</button>
       </div>
 

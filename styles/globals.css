@@ -69,9 +69,45 @@ body::after {
 .orb-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -100px; }
 .orb-2 { width: 400px; height: 400px; background: var(--accent2); bottom: 10%; left: -100px; }
 
-/* NAV */
-nav {
+/* DISCLAIMER BANNER */
+.disclaimer-banner {
   position: fixed; top: 0; left: 0; right: 0;
+  z-index: 600;
+  display: flex; align-items: center; justify-content: center; gap: 20px;
+  padding: 10px 32px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition), border-color var(--transition);
+  flex-wrap: wrap;
+}
+.disclaimer-text {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
+  color: var(--muted); text-align: center; line-height: 1.5;
+  font-family: 'Syne', sans-serif;
+}
+.disclaimer-btn {
+  flex-shrink: 0;
+  padding: 5px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  color: var(--accent);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.3s, color 0.3s;
+  font-family: 'Syne', sans-serif;
+}
+.disclaimer-btn:hover { background: var(--accent); color: var(--bg); }
+.disclaimer-close {
+  position: absolute; right: 16px;
+  background: none; border: none;
+  color: var(--muted); font-size: 14px;
+  cursor: pointer; padding: 4px 8px;
+  transition: color 0.2s; line-height: 1;
+}
+.disclaimer-close:hover { color: var(--text); }
+nav {
+  position: fixed; top: 42px; left: 0; right: 0;
   z-index: 500;
   display: flex; align-items: center; justify-content: space-between;
   padding: 30px 52px;
@@ -181,7 +217,7 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
 .hero {
   min-height: 100vh;
   display: flex; flex-direction: column; justify-content: center;
-  padding: 140px 52px 80px;
+  padding: 180px 52px 80px;
   position: relative; z-index: 1;
 }
 .hero-tag {
@@ -550,9 +586,11 @@ footer {
 @keyframes revealFallback { to { opacity: 1; transform: none; } }
 
 @media (max-width: 900px) {
-  nav { padding: 20px 24px; }
+  nav { padding: 20px 24px; top: 38px; }
   .nav-menu { display: none; }
-  .hero { padding: 72px 24px 60px; }
+  .hero { padding: 110px 24px 60px; }
+  .disclaimer-banner { padding: 8px 16px; gap: 10px; }
+  .disclaimer-text { font-size: 10px; }
   .hero-title { font-size: clamp(48px, 12vw, 80px); }
   .projects-section, .about-section { padding: 60px 24px; }
   .cards-set { grid-template-columns: 1fr; }

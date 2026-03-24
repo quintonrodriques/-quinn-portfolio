@@ -308,6 +308,18 @@ export default function Home({ uiProjects, uxProjects, about }) {
       <div className="orb orb-1" />
       <div className="orb orb-2" />
 
+      {/* DISCLAIMER BANNER */}
+      <div className="disclaimer-banner" id="disclaimerBanner">
+        <p className="disclaimer-text">A selection of my recent work is shown here. Proprietary projects from confidential engagements are available to view upon request.</p>
+        <a href="mailto:hello@quinn.design" className="disclaimer-btn">Connect</a>
+        <button className="disclaimer-close" onClick={() => {
+          document.getElementById('disclaimerBanner').classList.add('dismissed')
+          const nav = document.querySelector('nav')
+          nav.style.transition = 'top 0.4s ease, background 0.4s ease, backdrop-filter 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease'
+          nav.style.top = '0px'
+        }}>✕</button>
+      </div>
+
       {/* NAV */}
       <nav>
         <a href="#" className="nav-logo">
@@ -318,8 +330,8 @@ export default function Home({ uiProjects, uxProjects, about }) {
               <span className={`ll-i${isUX ? ' ll-hidden' : ''}`}>I</span>
               <span className={`ll-x${isUX ? ' ll-visible' : ''}`}>X</span>
             </span>
-            <span className="logo-letter nn" style={{ transitionDelay: '0.15s', marginLeft: '-1.5px' }}>N</span>
-            <span className="logo-letter nn" style={{ transitionDelay: '0.2s', marginLeft: '1.5px' }}>N</span>
+            <span className="logo-letter nn" style={{ transitionDelay: '0.15s' }}>N</span>
+            <span className="logo-letter nn" style={{ transitionDelay: '0.2s' }}>N</span>
           </span>
         </a>
         <ul className="nav-menu">

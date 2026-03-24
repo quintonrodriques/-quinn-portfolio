@@ -586,11 +586,11 @@ footer {
 @keyframes revealFallback { to { opacity: 1; transform: none; } }
 
 @media (max-width: 900px) {
-  nav { padding: 20px 24px; top: 38px; }
-  .nav-menu { display: none; }
+  nav { padding: 20px 24px; top: 52px; }
   .hero { padding: 110px 24px 60px; }
-  .disclaimer-banner { padding: 8px 16px; gap: 10px; }
+  .disclaimer-banner { padding: 8px 16px; gap: 8px; }
   .disclaimer-text { font-size: 10px; }
+  .disclaimer-btn { display: none; }
   .hero-title { font-size: clamp(48px, 12vw, 80px); }
   .projects-section, .about-section { padding: 60px 24px; }
   .cards-set { grid-template-columns: 1fr; }

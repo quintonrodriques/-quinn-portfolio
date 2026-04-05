@@ -465,7 +465,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         <div className="footer-logo">Quinn</div>
         <ul className="footer-nav">
           <li><a href="https://www.linkedin.com/in/quintonrodriques/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-          <a href="/QuinnRodriques_Resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+          <li><a href="/QuinnRodriques_Resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a></li>
           <li><a href="mailto:hi@quxnn.com">hi@quxnn.com</a></li>
         </ul>
       </footer>

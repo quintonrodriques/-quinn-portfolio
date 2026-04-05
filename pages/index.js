@@ -91,8 +91,10 @@ function ProjectCard({ project, index, onClick }) {
 export default function Home({ uiProjects, uxProjects, about }) {
   const [isUX, setIsUX] = useState(false)
   const [activeProject, setActiveProject] = useState(null)
+  const toggledRef = useRef(false)
 
   const handleToggle = () => {
+    toggledRef.current = true
     if (window._toggling) return
     window._toggling = true
 
@@ -282,11 +284,23 @@ export default function Home({ uiProjects, uxProjects, about }) {
     const skillEl = document.getElementById('skillItems')
     if (skillEl) skillObs.observe(skillEl)
 
+    // Ping toggle after 10s if not interacted with
+    const pingTimer = setTimeout(() => {
+      if (!toggledRef.current) {
+        const ring = document.getElementById('togglePingRing')
+        if (ring) {
+          ring.classList.add('ping')
+          setTimeout(() => ring.classList.remove('ping'), 2700)
+        }
+      }
+    }, 10000)
+
     window.addEventListener('scroll', handler, { passive: true })
     return () => {
       window.removeEventListener('scroll', handler)
       window.removeEventListener('resize', positionNav)
       clearTimeout(timer)
+      clearTimeout(pingTimer)
       skillObs.disconnect()
     }
   }, [])
@@ -356,9 +370,12 @@ export default function Home({ uiProjects, uxProjects, about }) {
           <li><a href="#about">About</a></li>
           <li><a href="mailto:hi@quxnn.com">Contact</a></li>
         </ul>
-        <div className={`toggle-wrap ${isUX ? 'ux-active' : ''}`} onClick={handleToggle}>
-          <span className={`t-opt ${!isUX ? 'active' : ''}`}>UI</span>
-          <span className={`t-opt ${isUX ? 'active' : ''}`}>UX</span>
+        <div style={{ position: 'relative', display: 'inline-flex' }}>
+          <div className="toggle-ping-ring" id="togglePingRing" />
+          <div className={`toggle-wrap ${isUX ? 'ux-active' : ''}`} id="toggleWrap" onClick={handleToggle}>
+            <span className={`t-opt ${!isUX ? 'active' : ''}`}>UI</span>
+            <span className={`t-opt ${isUX ? 'active' : ''}`}>UX</span>
+          </div>
         </div>
       </nav>
 
@@ -448,7 +465,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         <div className="footer-logo">Quinn</div>
         <ul className="footer-nav">
           <li><a href="https://www.linkedin.com/in/quintonrodriques/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-          <li><a href="/QuinnRodriques_Resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a></li>
+          <li><a href="#">Read.cv</a></li>
           <li><a href="mailto:hi@quxnn.com">hi@quxnn.com</a></li>
         </ul>
       </footer>

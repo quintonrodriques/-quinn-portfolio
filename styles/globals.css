@@ -222,6 +222,23 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
 .toggle-wrap.ux-active::before {
   transform: translateX(100%);
 }
+.toggle-ping-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 44px;
+  border: 2px solid var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+  transition: border-color var(--transition);
+}
+.toggle-ping-ring.ping {
+  animation: pingRing 0.9s ease-out 3;
+}
+@keyframes pingRing {
+  0%   { opacity: 0.9; transform: scale(1); }
+  100% { opacity: 0;   transform: scale(1.5); }
+}
 .t-opt {
   font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
   padding: 4px 10px; border-radius: 20px;
@@ -426,16 +443,7 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
   transition: background var(--transition), border-color var(--transition);
   position: relative; overflow: hidden;
 }
-.about-inner::before {
-  content: 'QUINN';
-  position: absolute; right: -40px; top: 50%;
-  transform: translateY(-50%) rotate(90deg);
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 140px; font-style: italic;
-  color: var(--accent); opacity: 0.04;
-  pointer-events: none; white-space: nowrap;
-  transition: color var(--transition); letter-spacing: -0.04em;
-}
+.about-inner::before { content: none; }
 .about-tag { display: flex; align-items: center; gap: 10px; margin-bottom: 32px; }
 .about-tag-line { width: 32px; height: 1px; background: var(--accent); transition: background var(--transition); }
 .about-tag-text { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); transition: color var(--transition); font-family: 'Syne Mono', monospace; }

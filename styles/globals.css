@@ -204,7 +204,7 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 40px;
-  padding: 4px;
+  padding: 4px 4px 4px 9px;
   transition: background var(--transition), border-color var(--transition);
   cursor: pointer;
   position: relative;

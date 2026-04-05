@@ -322,7 +322,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
       {/* DISCLAIMER BANNER */}
       <div className="disclaimer-banner" id="disclaimerBanner">
         <p className="disclaimer-text">A selection of my recent work is shown here. Proprietary projects from confidential engagements are available to view upon request.</p>
-        <a href="mailto:hello@quinn.design" className="disclaimer-btn">Connect</a>
+        <a href="mailto:hi@quxnn.com" className="disclaimer-btn">Connect</a>
         <button className="disclaimer-close" onClick={() => {
           const banner = document.getElementById('disclaimerBanner')
           const nav = document.querySelector('nav')
@@ -354,7 +354,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         <ul className="nav-menu">
           <li><a href="#work">Work</a></li>
           <li><a href="#about">About</a></li>
-          <li><a href="mailto:hello@quinn.design">Contact</a></li>
+          <li><a href="mailto:hi@quxnn.com">Contact</a></li>
         </ul>
         <div className={`toggle-wrap ${isUX ? 'ux-active' : ''}`} onClick={handleToggle}>
           <span className={`t-opt ${!isUX ? 'active' : ''}`}>UI</span>
@@ -427,7 +427,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
             </h2>
             <p className="about-text-body">{bio.bio}</p>
             {bio.bio2 && <p className="about-text-body">{bio.bio2}</p>}
-            <a href="mailto:hello@quinn.design" className="contact-link">Start a Conversation</a>
+            <a href="mailto:hi@quxnn.com" className="contact-link">Start a Conversation</a>
           </div>
           <div className="about-right">
             <div className="skill-items" id="skillItems">
@@ -449,7 +449,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         <ul className="footer-nav">
           <li><a href="https://www.linkedin.com/in/quintonrodriques/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
           <li><a href="#">Read.cv</a></li>
-          <li><a href="mailto:hello@quinn.design">hello@quinn.design</a></li>
+          <li><a href="mailto:hi@quxnn.com">hi@quxnn.com</a></li>
         </ul>
       </footer>
 

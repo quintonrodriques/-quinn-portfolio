@@ -378,7 +378,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
           const periodCX = pr.left + pr.width / 2
           const periodCY = pr.top + pr.height / 2
           const dist = Math.hypot(px - periodCX, py - periodCY)
-          if (dist < 150 && py > periodCY - 200) {
+          if (dist < 322 && py > periodCY - 430) {
             sucked = true
             cancelAnimationFrame(flyRaf)
             suckIntoPeriod(px, py, periodCX, periodCY)
@@ -406,10 +406,9 @@ export default function Home({ uiProjects, uxProjects, about }) {
         const ease = p * p
         const cx = startX + (toX - startX) * ease
         const cy = startY + (toY - startY) * ease
-        const scale = 1 - ease * 0.9
         flyDot.style.left = cx + 'px'
         flyDot.style.top = cy + 'px'
-        flyDot.style.transform = `translate(-50%, -50%) scale(${scale})`
+        flyDot.style.transform = `translate(-50%, -50%)`
         if (t < duration) {
           requestAnimationFrame(suckRaf)
         } else {

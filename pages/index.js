@@ -448,16 +448,12 @@ export default function Home({ uiProjects, uxProjects, about }) {
     }
 
     function showApproachHeading() {
-      const navItems = document.querySelectorAll('#navMenu li:not(#navApproach)')
-      navItems.forEach(el => {
-        el.style.transition = 'transform 0.5s cubic-bezier(0.76,0,0.24,1), opacity 0.4s ease'
-        el.style.transform = 'translateX(-20px)'
-        el.style.opacity = '0'
-      })
+      const navMenu = document.getElementById('navMenu')
+      const approach = document.getElementById('navApproach')
+      if (navMenu) navMenu.classList.add('approach-active')
       setTimeout(() => {
-        const approach = document.getElementById('navApproach')
         if (approach) approach.classList.add('approach-visible')
-      }, 500)
+      }, 300)
     }
 
     function toggleFreakout() {

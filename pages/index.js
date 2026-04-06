@@ -314,11 +314,13 @@ export default function Home({ uiProjects, uxProjects, about }) {
     if (!cursor || !dot || !ring || !flyDot) return
 
     let mouseX = 0, mouseY = 0, dotX = 0, dotY = 0
+    let prevMouseX = 0
     let isFreakout = false
     let lastX = 0, dirChanges = 0, lastDir = 0, lastDirTime = 0
     const SHAKE_THRESHOLD = 6, SHAKE_WINDOW = 750, SHAKES_NEEDED = 6
 
     const move = e => {
+      prevMouseX = mouseX
       mouseX = e.clientX
       mouseY = e.clientY
       cursor.style.left = mouseX + 'px'
@@ -342,26 +344,49 @@ export default function Home({ uiProjects, uxProjects, about }) {
       lastX = e.clientX
     }
 
+    function spawnFlyDot() {
+      // Capture velocity from recent mouse movement
+      const vx = (mouseX - prevMouseX) * 0.6 + (Math.random() - 0.5) * 4
+      const vy = -Math.abs(mouseX - lastX) * 0.3 - 8 - Math.random() * 6
+      let px = mouseX, py = mouseY
+      let velX = vx, velY = vy
+      const gravity = 0.4
+
+      flyDot.style.left = px + 'px'
+      flyDot.style.top = py + 'px'
+      flyDot.style.opacity = '1'
+      flyDot.style.transform = 'translate(-50%, -50%)'
+      flyDot.style.transition = 'none'
+
+      let flyRaf
+      const fly = () => {
+        velY += gravity
+        px += velX
+        py += velY
+        flyDot.style.left = px + 'px'
+        flyDot.style.top = py + 'px'
+
+        // Only fade once off screen
+        if (py > window.innerHeight + 10 || py < -10 || px < -10 || px > window.innerWidth + 10) {
+          flyDot.style.opacity = '0'
+          cancelAnimationFrame(flyRaf)
+          return
+        }
+        flyRaf = requestAnimationFrame(fly)
+      }
+      flyRaf = requestAnimationFrame(fly)
+    }
+
     function toggleFreakout() {
       if (!isFreakout) {
         isFreakout = true
         cursor.classList.add('freakout')
-        // Spawn fly dot at current cursor position
-        flyDot.style.left = mouseX + 'px'
-        flyDot.style.top = mouseY + 'px'
-        flyDot.classList.remove('flying')
-        void flyDot.offsetWidth // force reflow to restart animation
-        flyDot.classList.add('flying')
+        spawnFlyDot()
       } else {
         isFreakout = false
         cursor.classList.remove('freakout')
         cursor.classList.add('recovering')
-        // Spawn fly dot again on recovery
-        flyDot.style.left = mouseX + 'px'
-        flyDot.style.top = mouseY + 'px'
-        flyDot.classList.remove('flying')
-        void flyDot.offsetWidth
-        flyDot.classList.add('flying')
+        spawnFlyDot()
         setTimeout(() => cursor.classList.remove('recovering'), 400)
       }
     }

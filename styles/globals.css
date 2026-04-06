@@ -86,7 +86,7 @@ html { scroll-behavior: smooth; }
   transition: border-radius 0.4s ease, width 0.3s ease, height 0.3s ease;
 }
 
-/* Flying dot — fixed, spawns at cursor position */
+/* Flying dot — fixed, JS physics driven */
 .cursor-dot-fly {
   position: fixed;
   width: 4px; height: 4px;
@@ -96,14 +96,6 @@ html { scroll-behavior: smooth; }
   z-index: 99998;
   opacity: 0;
   transform: translate(-50%, -50%);
-}
-.cursor-dot-fly.flying {
-  animation: dotFly 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
-}
-@keyframes dotFly {
-  0%   { opacity: 1; transform: translate(-50%, -50%); }
-  35%  { opacity: 1; transform: translate(-50%, calc(-50% - 70px)); }
-  100% { opacity: 0; transform: translate(-50%, calc(-50% + 140px)); }
 }
 
 body {

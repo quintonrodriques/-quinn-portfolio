@@ -308,11 +308,30 @@ export default function Home({ uiProjects, uxProjects, about }) {
   // Custom cursor
   useEffect(() => {
     const cursor = document.getElementById('customCursor')
-    if (!cursor) return
+    const dot = cursor?.querySelector('.cursor-dot')
+    if (!cursor || !dot) return
+
+    let mouseX = 0, mouseY = 0
+    let dotX = 0, dotY = 0
+    let rafId
+
     const move = e => {
-      cursor.style.left = e.clientX + 'px'
-      cursor.style.top = e.clientY + 'px'
+      mouseX = e.clientX
+      mouseY = e.clientY
+      cursor.style.left = mouseX + 'px'
+      cursor.style.top = mouseY + 'px'
     }
+
+    const animateDot = () => {
+      dotX += (mouseX - dotX) * 0.18
+      dotY += (mouseY - dotY) * 0.18
+      const offsetX = dotX - mouseX
+      const offsetY = dotY - mouseY
+      dot.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`
+      rafId = requestAnimationFrame(animateDot)
+    }
+    rafId = requestAnimationFrame(animateDot)
+
     const hover = () => cursor.classList.add('hovering')
     const unhover = () => cursor.classList.remove('hovering')
     window.addEventListener('mousemove', move)
@@ -320,7 +339,10 @@ export default function Home({ uiProjects, uxProjects, about }) {
       el.addEventListener('mouseenter', hover)
       el.addEventListener('mouseleave', unhover)
     })
-    return () => window.removeEventListener('mousemove', move)
+    return () => {
+      window.removeEventListener('mousemove', move)
+      cancelAnimationFrame(rafId)
+    }
   }, [])
 
   // Scroll reveal

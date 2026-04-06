@@ -500,6 +500,37 @@ export default function Home({ uiProjects, uxProjects, about }) {
   }, [])
 
   // Approach sequence
+  // Mobile: tap "form." to activate skill cards
+  const handleMobileFormTap = () => {
+    // Trigger period ripple
+    const period = document.getElementById('aboutPeriod')
+    if (period) {
+      period.classList.remove('period-pulse')
+      void period.offsetWidth
+      period.classList.add('period-pulse')
+      setTimeout(() => period.classList.remove('period-pulse'), 700)
+    }
+
+    // Activate next skill card from bottom up
+    const cards = Array.from(document.querySelectorAll('.skill-item.si'))
+    const totalCards = cards.length
+    const activated = cards.filter(c => c.classList.contains('skill-powered')).length
+    const targetIndex = totalCards - 1 - activated
+    if (targetIndex >= 0) {
+      cards[targetIndex].classList.add('skill-powered')
+    }
+
+    // Check if all done
+    const newActivated = activated + 1
+    if (newActivated >= totalCards) {
+      // Show My Approach in nav
+      const navMenu = document.getElementById('navMenu')
+      const approach = document.getElementById('navApproach')
+      if (navMenu) navMenu.classList.add('approach-active')
+      if (approach) approach.classList.add('approach-visible')
+    }
+  }
+
   const triggerApproachSequence = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
@@ -783,7 +814,13 @@ export default function Home({ uiProjects, uxProjects, about }) {
             </div>
             <h2 className="about-heading" id="aboutHeading">
               Shaping<br />
-              <em>ideas</em> into form<span id="aboutPeriod" className="about-period">.</span>
+              <em>ideas</em> into <span
+                className="about-form-tap"
+                id="aboutFormTap"
+                onClick={() => {
+                  if (window.innerWidth <= 900) handleMobileFormTap()
+                }}
+              >form<span id="aboutPeriod" className="about-period">.</span></span>
             </h2>
             <p className="about-text-body">{bio.bio}</p>
             {bio.bio2 && <p className="about-text-body">{bio.bio2}</p>}

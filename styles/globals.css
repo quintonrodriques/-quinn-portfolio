@@ -754,6 +754,24 @@ footer {
   .about-inner { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }
   footer { padding: 30px 24px; flex-direction: column; gap: 20px; }
 
+  /* Hide custom cursor on mobile */
+  .custom-cursor, .cursor-dot-fly { display: none !important; }
+  * { cursor: auto !important; }
+
+  /* Tappable "form." word */
+  .about-form-tap {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    display: inline-block;
+  }
+  .about-form-tap::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 4px;
+  }
+
   /* Gallery — wider, scrollable overview */
   .gallery-modal { width: 98vw; max-height: 98vh; overflow-y: auto; }
   .gallery-blurb-panel.visible { max-height: none; overflow-y: visible; }

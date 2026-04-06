@@ -687,20 +687,47 @@ export default function Home({ uiProjects, uxProjects, about }) {
     const blobs = Array.from({ length: 8 }, () => new Blob())
     const driftStreaks = Array.from({ length: 25 }, () => new DriftStreak())
 
+    // Burst state — speed multiplier that decays after activation
+    let burstMult = 4.0
+    let burstDecay = 0.97 // multiplied each frame until ~1.0
+    const BASE_MULT = 1.0
+
     const animate = () => {
       const t = scrollT
-      const bgB = `rgba(0,10,4,${0.12 + t * 0.04})`
-      const bgC = `rgba(8,0,10,${0.12 + (1-t) * 0.04})`
-      // blend bg trail
-      ctx.fillStyle = t < 0.5 ? bgB : bgC
+
+      // Decay burst
+      if (burstMult > BASE_MULT) {
+        burstMult = Math.max(BASE_MULT, burstMult * burstDecay)
+      }
+
+      // Clear properly — no more ghost trails
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      // Dark bg overlay — solid, not semi-transparent
+      ctx.fillStyle = t < 0.5 ? '#000a04' : '#08000a'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      // B elements fade out as we scroll
-      streaks.forEach(s => s.draw(1 - t))
+      // B elements fade out as we scroll — apply burst to speed
+      streaks.forEach(s => {
+        const origSpeed = s.speed
+        s.speed *= burstMult
+        s.draw(1 - t)
+        s.speed = origSpeed
+      })
 
-      // C elements fade in as we scroll
-      blobs.forEach(b => b.draw(t))
-      driftStreaks.forEach(d => d.draw(t))
+      // C elements fade in as we scroll — apply burst to velocity
+      blobs.forEach(b => {
+        const ox = b.vx, oy = b.vy
+        b.vx *= burstMult; b.vy *= burstMult
+        b.draw(t)
+        b.vx = ox; b.vy = oy
+      })
+      driftStreaks.forEach(d => {
+        const ox = d.vx, oy = d.vy
+        d.vx *= burstMult; d.vy *= burstMult
+        d.draw(t)
+        d.vx = ox; d.vy = oy
+      })
 
       requestAnimationFrame(animate)
     }

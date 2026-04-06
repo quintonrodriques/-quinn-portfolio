@@ -501,8 +501,14 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
   // Approach sequence
   // Mobile: tap "form." to activate skill cards
-  const handleMobileFormTap = () => {
-    // Trigger period ripple
+  const handleMobileCardTap = (card) => {
+    if (window.innerWidth > 900) return
+    if (card.classList.contains('skill-powered')) return
+
+    // Light up this card
+    card.classList.add('skill-powered')
+
+    // Period ripple
     const period = document.getElementById('aboutPeriod')
     if (period) {
       period.classList.remove('period-pulse')
@@ -511,23 +517,20 @@ export default function Home({ uiProjects, uxProjects, about }) {
       setTimeout(() => period.classList.remove('period-pulse'), 700)
     }
 
-    // Activate next skill card from bottom up
+    // Check if all cards are now powered
     const cards = Array.from(document.querySelectorAll('.skill-item.si'))
-    const totalCards = cards.length
-    const activated = cards.filter(c => c.classList.contains('skill-powered')).length
-    const targetIndex = totalCards - 1 - activated
-    if (targetIndex >= 0) {
-      cards[targetIndex].classList.add('skill-powered')
-    }
+    const allPowered = cards.every(c => c.classList.contains('skill-powered'))
 
-    // Check if all done
-    const newActivated = activated + 1
-    if (newActivated >= totalCards) {
-      // Show My Approach in nav
+    if (allPowered) {
+      // Show My Approach in nav then auto-trigger sequence
       const navMenu = document.getElementById('navMenu')
       const approach = document.getElementById('navApproach')
       if (navMenu) navMenu.classList.add('approach-active')
       if (approach) approach.classList.add('approach-visible')
+      // Small delay so user sees nav appear, then trigger
+      setTimeout(() => {
+        triggerApproachSequence()
+      }, 800)
     }
   }
 
@@ -871,13 +874,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
             </div>
             <h2 className="about-heading" id="aboutHeading">
               Shaping<br />
-              <em>ideas</em> into <span
-                className="about-form-tap"
-                id="aboutFormTap"
-                onClick={() => {
-                  if (window.innerWidth <= 900) handleMobileFormTap()
-                }}
-              >form<span id="aboutPeriod" className="about-period">.</span></span>
+              <em>ideas</em> into form<span id="aboutPeriod" className="about-period">.</span>
             </h2>
             <p className="about-text-body">{bio.bio}</p>
             {bio.bio2 && <p className="about-text-body">{bio.bio2}</p>}
@@ -887,7 +884,12 @@ export default function Home({ uiProjects, uxProjects, about }) {
             <h3 className="approach-heading" id="approachHeading">My Approach</h3>
             <div className="skill-items" id="skillItems">
               {(bio.skills || FALLBACK_ABOUT.skills).map((s, i) => (
-                <div className="skill-item si" key={i} data-skill-index={i}>
+                <div
+                  className="skill-item si"
+                  key={i}
+                  data-skill-index={i}
+                  onClick={e => handleMobileCardTap(e.currentTarget)}
+                >
                   <div className="skill-icon" />
                   <span className="skill-name">{s.name}</span>
                   <span className="skill-note">{s.years}</span>

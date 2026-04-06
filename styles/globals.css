@@ -757,6 +757,7 @@ footer {
   /* Hide custom cursor on mobile */
   .custom-cursor, .cursor-dot-fly { display: none !important; }
   * { cursor: auto !important; }
+  .skill-item.si { cursor: pointer; }
 
   /* Tappable "form." word */
   .about-form-tap {

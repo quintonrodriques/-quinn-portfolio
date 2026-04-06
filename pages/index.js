@@ -373,12 +373,12 @@ export default function Home({ uiProjects, uxProjects, about }) {
         flyDot.style.top = py + 'px'
 
         // Check proximity to period
-        if (period) {
+        if (period && !blackHoleDisabled) {
           const pr = period.getBoundingClientRect()
           const periodCX = pr.left + pr.width / 2
           const periodCY = pr.top + pr.height / 2
           const dist = Math.hypot(px - periodCX, py - periodCY)
-          if (dist < 60 && py > periodCY - 80) {
+          if (dist < 150 && py > periodCY - 200) {
             sucked = true
             cancelAnimationFrame(flyRaf)
             suckIntoPeriod(px, py, periodCX, periodCY)
@@ -431,31 +431,32 @@ export default function Home({ uiProjects, uxProjects, about }) {
     }
 
     let activatedCards = 0
+    let blackHoleDisabled = false
+
     function activateNextSkillCard() {
       const cards = Array.from(document.querySelectorAll('.skill-item.si'))
       const totalCards = cards.length
-      // Activate from bottom up
       const targetIndex = totalCards - 1 - activatedCards
       if (targetIndex >= 0) {
         cards[targetIndex].classList.add('skill-powered')
         activatedCards++
       }
-      // All cards activated — show MY APPROACH heading
       if (activatedCards >= totalCards) {
+        blackHoleDisabled = true
         showApproachHeading()
       }
     }
 
     function showApproachHeading() {
-      const skillItems = document.querySelectorAll('.skill-item.si')
-      skillItems.forEach(el => {
+      const navItems = document.querySelectorAll('#navMenu li:not(#navApproach)')
+      navItems.forEach(el => {
         el.style.transition = 'transform 0.5s cubic-bezier(0.76,0,0.24,1), opacity 0.4s ease'
-        el.style.transform = 'translateX(-40px)'
-        el.style.opacity = '0.3'
+        el.style.transform = 'translateX(-20px)'
+        el.style.opacity = '0'
       })
       setTimeout(() => {
-        const heading = document.getElementById('approachHeading')
-        if (heading) heading.classList.add('approach-visible')
+        const approach = document.getElementById('navApproach')
+        if (approach) approach.classList.add('approach-visible')
       }, 500)
     }
 
@@ -564,10 +565,11 @@ export default function Home({ uiProjects, uxProjects, about }) {
             <span className="logo-letter nn" style={{ transitionDelay: '0.2s' }}>N</span>
           </span>
         </a>
-        <ul className="nav-menu">
+        <ul className="nav-menu" id="navMenu">
           <li><a href="#work">Work</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="mailto:hi@quxnn.com">Contact</a></li>
+          <li className="nav-approach" id="navApproach"><a href="#about">My Approach</a></li>
         </ul>
         <div style={{ position: 'relative', display: 'inline-flex' }}>
           <div className="toggle-ping-ring" id="togglePingRing" />

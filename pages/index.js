@@ -541,7 +541,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
     canvas.style.cssText = `
       position: fixed; inset: 0; z-index: -1;
       pointer-events: none; opacity: 0;
-      transition: opacity 1.2s ease;
+      transition: opacity 0.15s ease;
     `
     document.body.appendChild(canvas)
     const ctx = canvas.getContext('2d')
@@ -550,52 +550,59 @@ export default function Home({ uiProjects, uxProjects, about }) {
     resize()
     window.addEventListener('resize', resize)
 
-    // Streaks — racing lights
+    // Brighter neon colors
     const colors = [
-      'rgba(180,120,255,', // soft purple
-      'rgba(80,220,180,',  // mint
-      'rgba(255,160,80,',  // amber
-      'rgba(60,180,255,',  // blue
-      'rgba(255,100,160,', // pink
+      'rgba(200,100,255,',  // vivid purple
+      'rgba(0,255,180,',    // neon mint
+      'rgba(255,180,0,',    // bright amber
+      'rgba(0,180,255,',    // electric blue
+      'rgba(255,60,160,',   // hot pink
+      'rgba(120,255,80,',   // lime
+      'rgba(255,80,80,',    // red-orange
     ]
 
     class Streak {
       constructor() { this.reset(true) }
       reset(init = false) {
-        this.x = init ? Math.random() * canvas.width : -200
+        this.x = init ? Math.random() * canvas.width : (Math.random() > 0.5 ? -300 : canvas.width + 300)
+        this.goingRight = this.x < 0
         this.y = Math.random() * canvas.height
-        this.length = 80 + Math.random() * 220
-        this.speed = 3 + Math.random() * 6
-        this.width = 0.5 + Math.random() * 1.5
+        this.length = 20 + Math.random() * 80   // much smaller
+        this.speed = (6 + Math.random() * 12) * (this.goingRight ? 1 : -1)  // 2x faster
+        this.width = 0.5 + Math.random() * 1.2
         this.color = colors[Math.floor(Math.random() * colors.length)]
-        this.opacity = 0.04 + Math.random() * 0.1
-        this.curve = (Math.random() - 0.5) * 0.8
-        this.vy = (Math.random() - 0.5) * 0.4
+        this.opacity = 0.15 + Math.random() * 0.35  // brighter
+        this.curve = (Math.random() - 0.5) * 1.2
+        this.vy = (Math.random() - 0.5) * 1.8  // vertical motion
       }
       draw() {
         ctx.save()
-        const grad = ctx.createLinearGradient(this.x - this.length, this.y, this.x, this.y)
+        const x0 = this.goingRight ? this.x - this.length : this.x + this.length
+        const grad = ctx.createLinearGradient(x0, this.y, this.x, this.y)
         grad.addColorStop(0, this.color + '0)')
-        grad.addColorStop(0.5, this.color + this.opacity + ')')
+        grad.addColorStop(0.4, this.color + this.opacity + ')')
         grad.addColorStop(1, this.color + '0)')
         ctx.strokeStyle = grad
         ctx.lineWidth = this.width
         ctx.beginPath()
-        ctx.moveTo(this.x - this.length, this.y)
+        ctx.moveTo(x0, this.y)
         ctx.quadraticCurveTo(
-          this.x - this.length / 2,
-          this.y + this.curve * 20,
+          x0 + (this.x - x0) * 0.5,
+          this.y + this.curve * 15,
           this.x, this.y
         )
         ctx.stroke()
         ctx.restore()
         this.x += this.speed
         this.y += this.vy
-        if (this.x > canvas.width + 200) this.reset()
+        // bounce vertically
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1
+        const offscreen = this.goingRight ? this.x > canvas.width + 300 : this.x < -300
+        if (offscreen) this.reset()
       }
     }
 
-    const streaks = Array.from({ length: 60 }, () => new Streak())
+    const streaks = Array.from({ length: 90 }, () => new Streak())
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -604,12 +611,16 @@ export default function Home({ uiProjects, uxProjects, about }) {
     }
     animate()
 
-    // Fade in after short delay
-    setTimeout(() => { canvas.style.opacity = '1' }, 100)
+    // Snap in instantly
+    requestAnimationFrame(() => { canvas.style.opacity = '1' })
 
-    // Darken body bg
-    document.body.style.transition = 'background 1.5s ease'
-    document.body.style.background = '#0A0810'
+    // Snap bg dark, hide orbs
+    document.body.style.transition = 'none'
+    document.body.style.background = '#060409'
+    document.querySelectorAll('.orb').forEach(o => {
+      o.style.transition = 'none'
+      o.style.opacity = '0'
+    })
   }
 
   // Scroll reveal
@@ -699,9 +710,10 @@ export default function Home({ uiProjects, uxProjects, about }) {
           <span className="hero-tag-text">{bio.availability || 'Available for Projects — 2026'}</span>
         </div>
         <h1 className="hero-title">
-          <span className="hw hw-1" id="hw-organic">Organic</span> <span className="hw hw-4" id="hw-solutions">solutions</span><br />
-          <span className="line-em"><span className="hw hw-5" id="hw-through">through</span></span>
-          <span className="hero-inline-row">
+          <span className="hw hw-1" id="hw-organic" style={{display:'block'}}>Organic</span>
+          <span className="hw hw-4" id="hw-solutions" style={{display:'block'}}>solutions</span>
+          <span className="hw hw-5" id="hw-through" style={{display:'block'}}><span className="line-em">through</span></span>
+          <span className="hero-inline-row" id="hw-last-row">
             <span className="line-outline"><span className="hw hw-3 outline-word" id="hw-digital">digital</span></span>
             <span className="line-outline"><span className="hw hw-2 outline-word" id="hw-interfaces">interfaces.</span></span>
           </span>

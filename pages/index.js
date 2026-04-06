@@ -540,7 +540,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         if (!el) return
         el.style.transition = 'none'
         el.textContent = newText
-      }, 1000 + delay)
+      }, 2000 + delay)
     }
 
     swapWord('hw-organic', 'Design', 0)
@@ -561,7 +561,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         if (interfaces.parentElement) interfaces.parentElement.style.display = 'none'
       }
       startRacingBackground()
-    }, 1000 + 1750)
+    }, 2000 + 1750)
   }
 
   const startRacingBackground = () => {

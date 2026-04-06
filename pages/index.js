@@ -310,7 +310,8 @@ export default function Home({ uiProjects, uxProjects, about }) {
     const cursor = document.getElementById('customCursor')
     const dot = cursor?.querySelector('.cursor-dot')
     const ring = cursor?.querySelector('.cursor-ring')
-    if (!cursor || !dot || !ring) return
+    const flyDot = document.getElementById('cursorDotFly')
+    if (!cursor || !dot || !ring || !flyDot) return
 
     let mouseX = 0, mouseY = 0, dotX = 0, dotY = 0
     let isFreakout = false
@@ -345,17 +346,22 @@ export default function Home({ uiProjects, uxProjects, about }) {
       if (!isFreakout) {
         isFreakout = true
         cursor.classList.add('freakout')
-        setTimeout(() => {
-          dot.style.animation = 'none'
-          dot.style.opacity = '0'
-        }, 600)
+        // Spawn fly dot at current cursor position
+        flyDot.style.left = mouseX + 'px'
+        flyDot.style.top = mouseY + 'px'
+        flyDot.classList.remove('flying')
+        void flyDot.offsetWidth // force reflow to restart animation
+        flyDot.classList.add('flying')
       } else {
         isFreakout = false
         cursor.classList.remove('freakout')
         cursor.classList.add('recovering')
-        dot.style.animation = 'none'
-        dot.style.opacity = '1'
-        dot.style.transform = 'translate(-50%, -50%)'
+        // Spawn fly dot again on recovery
+        flyDot.style.left = mouseX + 'px'
+        flyDot.style.top = mouseY + 'px'
+        flyDot.classList.remove('flying')
+        void flyDot.offsetWidth
+        flyDot.classList.add('flying')
         setTimeout(() => cursor.classList.remove('recovering'), 400)
       }
     }
@@ -414,6 +420,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         <div className="cursor-ring" />
         <div className="cursor-dot" />
       </div>
+      <div className="cursor-dot-fly" id="cursorDotFly" />
       <div className="orb orb-1" />
       <div className="orb orb-2" />
 

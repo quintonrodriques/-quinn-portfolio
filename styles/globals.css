@@ -75,22 +75,35 @@ html { scroll-behavior: smooth; }
   border-color: rgba(255,255,255,0.9);
   transition: border-radius 0.3s ease, width 0.3s ease, height 0.3s ease;
 }
-.custom-cursor.freakout .cursor-dot {
-  animation: dotFly 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
-}
+.custom-cursor.freakout .cursor-dot { opacity: 0; }
 @keyframes spinSquare {
   from { transform: translate(-50%, -50%) rotate(0deg); }
   to   { transform: translate(-50%, -50%) rotate(360deg); }
-}
-@keyframes dotFly {
-  0%   { opacity: 1; transform: translate(-50%, -50%); }
-  40%  { opacity: 1; transform: translate(calc(-50% + 6px), calc(-50% - 60px)); }
-  100% { opacity: 0; transform: translate(calc(-50% + 2px), calc(-50% + 120px)); }
 }
 .custom-cursor.recovering .cursor-ring {
   border-radius: 50%;
   animation: none;
   transition: border-radius 0.4s ease, width 0.3s ease, height 0.3s ease;
+}
+
+/* Flying dot — fixed, spawns at cursor position */
+.cursor-dot-fly {
+  position: fixed;
+  width: 4px; height: 4px;
+  background: white;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+.cursor-dot-fly.flying {
+  animation: dotFly 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+@keyframes dotFly {
+  0%   { opacity: 1; transform: translate(-50%, -50%); }
+  35%  { opacity: 1; transform: translate(-50%, calc(-50% - 70px)); }
+  100% { opacity: 0; transform: translate(-50%, calc(-50% + 140px)); }
 }
 
 body {

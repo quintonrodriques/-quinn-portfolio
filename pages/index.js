@@ -445,7 +445,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         cards[targetIndex].classList.add('skill-powered')
         activatedCards++
       }
-      if (activatedCards >= 1) {
+      if (activatedCards >= totalCards) {
         blackHoleDisabled = true
         showApproachHeading()
       }

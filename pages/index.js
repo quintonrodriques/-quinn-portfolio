@@ -345,12 +345,11 @@ export default function Home({ uiProjects, uxProjects, about }) {
     }
 
     function spawnFlyDot() {
-      // Capture velocity from recent mouse movement
-      const vx = (mouseX - prevMouseX) * 0.6 + (Math.random() - 0.5) * 4
-      const vy = -Math.abs(mouseX - lastX) * 0.3 - 8 - Math.random() * 6
+      const vx = (Math.random() - 0.5) * 10  // pure random horizontal
+      const vy = -10 - Math.random() * 6
       let px = mouseX, py = mouseY
       let velX = vx, velY = vy
-      const gravity = 0.4
+      const gravity = 0.45
 
       flyDot.style.left = px + 'px'
       flyDot.style.top = py + 'px'
@@ -379,14 +378,15 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
     function toggleFreakout() {
       if (!isFreakout) {
+        // Circle → Square: spawn dot
         isFreakout = true
         cursor.classList.add('freakout')
         spawnFlyDot()
       } else {
+        // Square → Circle: no dot, just recover
         isFreakout = false
         cursor.classList.remove('freakout')
         cursor.classList.add('recovering')
-        spawnFlyDot()
         setTimeout(() => cursor.classList.remove('recovering'), 400)
       }
     }

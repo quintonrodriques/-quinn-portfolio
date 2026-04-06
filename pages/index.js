@@ -27,7 +27,7 @@ const FALLBACK_UX = [
 ]
 
 const FALLBACK_ABOUT = {
-  bio: 'Quinn is a UX designer with ten years of experience shaping the way people interact with complex systems. From award-winning video games to fintech platforms and health tech products, the through-line has always been the same: making the difficult feel effortless.',
+  bio: 'While making the design of a system user-centric is my highest priority, the aspect I enjoy most about design is infusing personality into it. A great system is one that feels natural to use and leaves the user enjoying their experience.',
   bio2: 'Based in Montreal, available worldwide.',
   availability: 'Available for Projects — 2026',
   skills: [
@@ -537,13 +537,21 @@ export default function Home({ uiProjects, uxProjects, about }) {
   const triggerApproachSequence = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
+    // Hide the available widget
+    const heroTag = document.querySelector('.hero-tag')
+    if (heroTag) {
+      heroTag.style.transition = 'none'
+      heroTag.style.opacity = '0'
+      heroTag.style.pointerEvents = 'none'
+    }
+
     const swapWord = (id, newText, delay) => {
       setTimeout(() => {
         const el = document.getElementById(id)
         if (!el) return
         el.style.transition = 'none'
         el.textContent = newText
-      }, 2000 + delay)
+      }, 1500 + delay)
     }
 
     swapWord('hw-organic', 'Design', 0)
@@ -564,7 +572,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         if (interfaces.parentElement) interfaces.parentElement.style.display = 'none'
       }
       startRacingBackground()
-    }, 2000 + 1750)
+    }, 1500 + 1750)
   }
 
   const startRacingBackground = () => {

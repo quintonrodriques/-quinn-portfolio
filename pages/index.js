@@ -305,6 +305,24 @@ export default function Home({ uiProjects, uxProjects, about }) {
     }
   }, [])
 
+  // Custom cursor
+  useEffect(() => {
+    const cursor = document.getElementById('customCursor')
+    if (!cursor) return
+    const move = e => {
+      cursor.style.left = e.clientX + 'px'
+      cursor.style.top = e.clientY + 'px'
+    }
+    const hover = () => cursor.classList.add('hovering')
+    const unhover = () => cursor.classList.remove('hovering')
+    window.addEventListener('mousemove', move)
+    document.querySelectorAll('a, button, [onClick], .pcard, .toggle-wrap').forEach(el => {
+      el.addEventListener('mouseenter', hover)
+      el.addEventListener('mouseleave', unhover)
+    })
+    return () => window.removeEventListener('mousemove', move)
+  }, [])
+
   // Scroll reveal
   useEffect(() => {
     const els = document.querySelectorAll('.r')
@@ -330,6 +348,10 @@ export default function Home({ uiProjects, uxProjects, about }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <div className="custom-cursor" id="customCursor">
+        <div className="cursor-ring" />
+        <div className="cursor-dot" />
+      </div>
       <div className="orb orb-1" />
       <div className="orb orb-2" />
 
@@ -462,10 +484,10 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
       {/* FOOTER */}
       <footer>
-        <div className="footer-logo">Quinn</div>
+        <div className="footer-logo"></div>
         <ul className="footer-nav">
           <li><a href="https://www.linkedin.com/in/quintonrodriques/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-          <li><a href="/QuinnRodriques_Resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a></li>
+          <li><a href="#">Read.cv</a></li>
           <li><a href="mailto:hi@quxnn.com">hi@quxnn.com</a></li>
         </ul>
       </footer>

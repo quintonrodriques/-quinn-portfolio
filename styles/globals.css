@@ -37,6 +37,37 @@ body.ux-mode {
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
+* { cursor: none !important; }
+
+/* Custom cursor */
+.custom-cursor {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+}
+.cursor-ring {
+  width: 24px; height: 24px;
+  border: 1.5px solid rgba(255,255,255,0.8);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s ease, height 0.2s ease, border-color 0.2s;
+}
+.cursor-dot {
+  width: 4px; height: 4px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.custom-cursor.hovering .cursor-ring {
+  width: 36px; height: 36px;
+  border-color: rgba(255,255,255,0.5);
+}
 
 body {
   font-family: 'Syne', sans-serif;

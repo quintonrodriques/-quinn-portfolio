@@ -569,11 +569,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
     if (existing) return
     const canvas = document.createElement('canvas')
     canvas.id = 'racingCanvas'
-    canvas.style.cssText = `
-      position: fixed; inset: 0; z-index: -1;
-      pointer-events: none; opacity: 0;
-      transition: opacity 0.15s ease;
-    `
+    canvas.style.cssText = `position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 0.15s ease;`
     document.body.appendChild(canvas)
     const ctx = canvas.getContext('2d')
 
@@ -581,79 +577,140 @@ export default function Home({ uiProjects, uxProjects, about }) {
     resize()
     window.addEventListener('resize', resize)
 
-    // Brighter neon colors
-    const colors = [
-      'rgba(200,100,255,',  // vivid purple
-      'rgba(0,255,180,',    // neon mint
-      'rgba(255,180,0,',    // bright amber
-      'rgba(0,180,255,',    // electric blue
-      'rgba(255,60,160,',   // hot pink
-      'rgba(120,255,80,',   // lime
-      'rgba(255,80,80,',    // red-orange
-    ]
+    // scroll progress 0 = top (B), 1 = bottom (C)
+    let scrollT = 0
+    const updateScroll = () => {
+      const max = document.body.scrollHeight - window.innerHeight
+      scrollT = max > 0 ? Math.min(1, window.scrollY / max) : 0
+    }
+    window.addEventListener('scroll', updateScroll, { passive: true })
 
+    // Shared colors
+    const bColors = ['#00ffaa','#00ccff','#aaff00','#ffcc00','#ff6600']
+    const cColors = ['#ff3cac','#784ba0','#2b86c5','#ff6b35','#00f5d4']
+
+    // Option B — streaks
     class Streak {
       constructor() { this.reset(true) }
       reset(init = false) {
-        this.x = init ? Math.random() * canvas.width : (Math.random() > 0.5 ? -300 : canvas.width + 300)
-        this.goingRight = this.x < 0
+        this.x = init ? Math.random() * canvas.width : -200
         this.y = Math.random() * canvas.height
-        this.length = 20 + Math.random() * 80   // much smaller
-        this.speed = (6 + Math.random() * 12) * (this.goingRight ? 1 : -1)  // 2x faster
-        this.width = 0.5 + Math.random() * 1.2
-        this.color = colors[Math.floor(Math.random() * colors.length)]
-        this.opacity = 0.15 + Math.random() * 0.35  // brighter
-        this.curve = (Math.random() - 0.5) * 1.2
-        this.vy = (Math.random() - 0.5) * 1.8  // vertical motion
+        this.len = 40 + Math.random() * 130
+        this.speed = 5 + Math.random() * 14
+        this.width = 0.8 + Math.random() * 2
+        this.color = bColors[Math.floor(Math.random() * bColors.length)]
+        this.opacity = 0.45 + Math.random() * 0.55
+        this.vy = (Math.random() - 0.5) * 1.2
       }
-      draw() {
-        ctx.save()
-        const x0 = this.goingRight ? this.x - this.length : this.x + this.length
-        const grad = ctx.createLinearGradient(x0, this.y, this.x, this.y)
-        grad.addColorStop(0, this.color + '0)')
-        grad.addColorStop(0.4, this.color + this.opacity + ')')
-        grad.addColorStop(1, this.color + '0)')
-        ctx.strokeStyle = grad
-        ctx.lineWidth = this.width
-        ctx.beginPath()
-        ctx.moveTo(x0, this.y)
-        ctx.quadraticCurveTo(
-          x0 + (this.x - x0) * 0.5,
-          this.y + this.curve * 15,
-          this.x, this.y
-        )
-        ctx.stroke()
-        ctx.restore()
+      draw(alpha) {
+        if (alpha <= 0) return
         this.x += this.speed
         this.y += this.vy
-        // bounce vertically
         if (this.y < 0 || this.y > canvas.height) this.vy *= -1
-        const offscreen = this.goingRight ? this.x > canvas.width + 300 : this.x < -300
-        if (offscreen) this.reset()
+        if (this.x > canvas.width + this.len) this.reset()
+        const g = ctx.createLinearGradient(this.x - this.len, this.y, this.x, this.y)
+        g.addColorStop(0, 'transparent')
+        g.addColorStop(0.5, this.color + Math.round(this.opacity * alpha * 255).toString(16).padStart(2,'0'))
+        g.addColorStop(1, 'transparent')
+        ctx.save()
+        ctx.shadowBlur = 14; ctx.shadowColor = this.color
+        ctx.strokeStyle = g; ctx.lineWidth = this.width
+        ctx.beginPath(); ctx.moveTo(this.x - this.len, this.y); ctx.lineTo(this.x, this.y); ctx.stroke()
+        ctx.restore()
       }
     }
 
-    const streaks = Array.from({ length: 90 }, () => new Streak())
+    // Option C — blobs + streaks
+    class Blob {
+      constructor() {
+        this.x = Math.random() * canvas.width
+        this.y = Math.random() * canvas.height
+        this.r = 50 + Math.random() * 90
+        this.vx = (Math.random() - 0.5) * 2
+        this.vy = (Math.random() - 0.5) * 2
+        this.color = cColors[Math.floor(Math.random() * cColors.length)]
+        this.phase = Math.random() * Math.PI * 2
+      }
+      draw(alpha) {
+        if (alpha <= 0) return
+        this.phase += 0.018
+        this.x += this.vx + Math.sin(this.phase) * 0.5
+        this.y += this.vy + Math.cos(this.phase) * 0.4
+        if (this.x < -this.r || this.x > canvas.width + this.r) this.vx *= -1
+        if (this.y < -this.r || this.y > canvas.height + this.r) this.vy *= -1
+        const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r)
+        g.addColorStop(0, this.color + 'bb')
+        g.addColorStop(0.4, this.color + '44')
+        g.addColorStop(1, 'transparent')
+        ctx.save()
+        ctx.globalAlpha = 0.5 * alpha
+        ctx.shadowBlur = 40; ctx.shadowColor = this.color
+        ctx.fillStyle = g
+        ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fill()
+        ctx.restore()
+      }
+    }
+
+    class DriftStreak {
+      constructor() { this.reset() }
+      reset() {
+        this.x = Math.random() * canvas.width
+        this.y = Math.random() * canvas.height
+        this.vx = (Math.random() - 0.5) * 7
+        this.vy = (Math.random() - 0.5) * 3
+        this.len = 20 + Math.random() * 70
+        this.color = cColors[Math.floor(Math.random() * cColors.length)]
+        this.alpha = 0.3 + Math.random() * 0.5
+        this.w = 0.5 + Math.random() * 1.5
+      }
+      draw(alpha) {
+        if (alpha <= 0) return
+        this.x += this.vx; this.y += this.vy
+        if (this.x < -100 || this.x > canvas.width + 100) this.vx *= -1
+        if (this.y < -40 || this.y > canvas.height + 40) this.vy *= -1
+        const ang = Math.atan2(this.vy, this.vx)
+        ctx.save()
+        ctx.shadowBlur = 10; ctx.shadowColor = this.color
+        ctx.strokeStyle = this.color; ctx.lineWidth = this.w
+        ctx.globalAlpha = this.alpha * alpha
+        ctx.beginPath()
+        ctx.moveTo(this.x - Math.cos(ang) * this.len, this.y - Math.sin(ang) * this.len)
+        ctx.lineTo(this.x, this.y); ctx.stroke()
+        ctx.restore()
+      }
+    }
+
+    const streaks = Array.from({ length: 20 }, () => new Streak())
+    const blobs = Array.from({ length: 8 }, () => new Blob())
+    const driftStreaks = Array.from({ length: 25 }, () => new DriftStreak())
 
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      streaks.forEach(s => s.draw())
+      const t = scrollT
+      const bgB = `rgba(0,10,4,${0.12 + t * 0.04})`
+      const bgC = `rgba(8,0,10,${0.12 + (1-t) * 0.04})`
+      // blend bg trail
+      ctx.fillStyle = t < 0.5 ? bgB : bgC
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      // B elements fade out as we scroll
+      streaks.forEach(s => s.draw(1 - t))
+
+      // C elements fade in as we scroll
+      blobs.forEach(b => b.draw(t))
+      driftStreaks.forEach(d => d.draw(t))
+
       requestAnimationFrame(animate)
     }
     animate()
 
-    // Snap in instantly
     requestAnimationFrame(() => { canvas.style.opacity = '1' })
-
-    // Snap bg dark, hide orbs
     document.body.style.transition = 'none'
-    document.body.style.background = '#060409'
+    document.body.style.background = '#000a04'
     document.querySelectorAll('.orb').forEach(o => {
       o.style.transition = 'none'
       o.style.opacity = '0'
     })
 
-    // Load Space Grotesk and swap hero font
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap'

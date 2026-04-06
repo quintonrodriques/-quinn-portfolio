@@ -41,13 +41,13 @@ const FALLBACK_ABOUT = {
 }
 
 const gradients = [
-  'linear-gradient(135deg,#221D35,#312660)',
-  'linear-gradient(135deg,#35201D,#602626)',
-  'linear-gradient(135deg,#1D3026,#204D35)',
-  'linear-gradient(135deg,#1D2835,#204060)',
-  'linear-gradient(135deg,#2D2016,#4D3520)',
-  'linear-gradient(135deg,#16222D,#203040)',
-  'linear-gradient(135deg,#1A0808,#3D0C0C)',
+  'rgba(120,80,255,0.08)',
+  'rgba(255,80,80,0.08)',
+  'rgba(80,200,120,0.08)',
+  'rgba(80,160,255,0.08)',
+  'rgba(255,160,80,0.08)',
+  'rgba(80,200,200,0.08)',
+  'rgba(200,80,160,0.08)',
 ]
 
 function ProjectCard({ project, index, onClick }) {
@@ -537,13 +537,12 @@ export default function Home({ uiProjects, uxProjects, about }) {
   const triggerApproachSequence = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
-    // Hide the available widget
-    const heroTag = document.querySelector('.hero-tag')
-    if (heroTag) {
-      heroTag.style.transition = 'none'
-      heroTag.style.opacity = '0'
-      heroTag.style.pointerEvents = 'none'
-    }
+    // Hide widget and update description immediately
+    const heroTag = document.getElementById('heroTag')
+    if (heroTag) heroTag.style.display = 'none'
+
+    const heroDesc = document.getElementById('heroDesc')
+    if (heroDesc) heroDesc.textContent = 'While making the design of a system user-centric is my highest priority, the aspect I enjoy most about design is infusing personality into it. A great system is one that feels natural to use and leaves the user enjoying their experience.'
 
     const swapWord = (id, newText, delay) => {
       setTimeout(() => {
@@ -572,6 +571,13 @@ export default function Home({ uiProjects, uxProjects, about }) {
         if (interfaces.parentElement) interfaces.parentElement.style.display = 'none'
       }
       startRacingBackground()
+
+      // Update hero description text
+      const desc = document.getElementById('heroDesc')
+      if (desc) {
+        desc.style.transition = 'none'
+        desc.textContent = 'While making the design of a system user-centric is my highest priority, the aspect I enjoy most about design is infusing personality into it. A great system is one that feels natural to use and leaves the user enjoying their experience.'
+      }
     }, 1500 + 1750)
   }
 
@@ -857,7 +863,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
       {/* HERO */}
       <section className="hero" id="heroSection">
-        <div className="hero-tag">
+        <div className="hero-tag" id="heroTag">
           <div className="hero-tag-dot" />
           <span className="hero-tag-text">{bio.availability || 'Available for Projects — 2026'}</span>
         </div>
@@ -871,7 +877,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
           </span>
         </h1>
         <div className="hero-row">
-          <p className="hero-desc">
+          <p className="hero-desc" id="heroDesc">
             Quinn is a UI/UX designer crafting digital experiences that feel effortless to use and beautiful to inhabit. Based in {bio.location || 'Montreal'}.
           </p>
           <div className="hero-scroll">

@@ -345,27 +345,47 @@ export default function Home({ uiProjects, uxProjects, about }) {
     }
 
     function spawnFlyDot() {
-      const vx = (Math.random() - 0.5) * 10  // pure random horizontal
+      const vx = (Math.random() - 0.5) * 10
       const vy = -10 - Math.random() * 6
+      const vxVariance = (Math.random() - 0.5) * 2
       let px = mouseX, py = mouseY
       let velX = vx, velY = vy
-      const gravity = 0.45
+      const gravity = 0.45 + (Math.random() - 0.5) * 0.1
 
       flyDot.style.left = px + 'px'
       flyDot.style.top = py + 'px'
       flyDot.style.opacity = '1'
-      flyDot.style.transform = 'translate(-50%, -50%)'
+      flyDot.style.transform = 'translate(-50%, -50%) scale(1)'
       flyDot.style.transition = 'none'
 
+      const period = document.getElementById('aboutPeriod')
+
       let flyRaf
+      let sucked = false
       const fly = () => {
+        if (sucked) return
         velY += gravity
+        velX += vxVariance * 0.05
         px += velX
         py += velY
+
         flyDot.style.left = px + 'px'
         flyDot.style.top = py + 'px'
 
-        // Only fade once off screen
+        // Check proximity to period
+        if (period) {
+          const pr = period.getBoundingClientRect()
+          const periodCX = pr.left + pr.width / 2
+          const periodCY = pr.top + pr.height / 2
+          const dist = Math.hypot(px - periodCX, py - periodCY)
+          if (dist < 60 && py > periodCY - 80) {
+            sucked = true
+            cancelAnimationFrame(flyRaf)
+            suckIntoPeriod(px, py, periodCX, periodCY)
+            return
+          }
+        }
+
         if (py > window.innerHeight + 10 || py < -10 || px < -10 || px > window.innerWidth + 10) {
           flyDot.style.opacity = '0'
           cancelAnimationFrame(flyRaf)
@@ -374,6 +394,69 @@ export default function Home({ uiProjects, uxProjects, about }) {
         flyRaf = requestAnimationFrame(fly)
       }
       flyRaf = requestAnimationFrame(fly)
+    }
+
+    function suckIntoPeriod(fromX, fromY, toX, toY) {
+      let t = 0
+      const duration = 18 // frames
+      const startX = fromX, startY = fromY
+      const suckRaf = () => {
+        t++
+        const p = t / duration
+        const ease = p * p
+        const cx = startX + (toX - startX) * ease
+        const cy = startY + (toY - startY) * ease
+        const scale = 1 - ease * 0.9
+        flyDot.style.left = cx + 'px'
+        flyDot.style.top = cy + 'px'
+        flyDot.style.transform = `translate(-50%, -50%) scale(${scale})`
+        if (t < duration) {
+          requestAnimationFrame(suckRaf)
+        } else {
+          flyDot.style.opacity = '0'
+          triggerPeriodPulse()
+          activateNextSkillCard()
+        }
+      }
+      requestAnimationFrame(suckRaf)
+    }
+
+    function triggerPeriodPulse() {
+      const period = document.getElementById('aboutPeriod')
+      if (!period) return
+      period.classList.remove('period-pulse')
+      void period.offsetWidth
+      period.classList.add('period-pulse')
+      setTimeout(() => period.classList.remove('period-pulse'), 600)
+    }
+
+    let activatedCards = 0
+    function activateNextSkillCard() {
+      const cards = Array.from(document.querySelectorAll('.skill-item.si'))
+      const totalCards = cards.length
+      // Activate from bottom up
+      const targetIndex = totalCards - 1 - activatedCards
+      if (targetIndex >= 0) {
+        cards[targetIndex].classList.add('skill-powered')
+        activatedCards++
+      }
+      // All cards activated — show MY APPROACH heading
+      if (activatedCards >= totalCards) {
+        showApproachHeading()
+      }
+    }
+
+    function showApproachHeading() {
+      const skillItems = document.querySelectorAll('.skill-item.si')
+      skillItems.forEach(el => {
+        el.style.transition = 'transform 0.5s cubic-bezier(0.76,0,0.24,1), opacity 0.4s ease'
+        el.style.transform = 'translateX(-40px)'
+        el.style.opacity = '0.3'
+      })
+      setTimeout(() => {
+        const heading = document.getElementById('approachHeading')
+        if (heading) heading.classList.add('approach-visible')
+      }, 500)
     }
 
     function toggleFreakout() {
@@ -554,18 +637,19 @@ export default function Home({ uiProjects, uxProjects, about }) {
               <div className="about-tag-line" />
               <span className="about-tag-text">About</span>
             </div>
-            <h2 className="about-heading">
+            <h2 className="about-heading" id="aboutHeading">
               Shaping<br />
-              <em>ideas</em> into form.
+              <em>ideas</em> into form<span id="aboutPeriod" className="about-period">.</span>
             </h2>
             <p className="about-text-body">{bio.bio}</p>
             {bio.bio2 && <p className="about-text-body">{bio.bio2}</p>}
             <a href="mailto:hi@quxnn.com" className="contact-link">Start a Conversation</a>
           </div>
           <div className="about-right">
+            <h3 className="approach-heading" id="approachHeading">My Approach</h3>
             <div className="skill-items" id="skillItems">
               {(bio.skills || FALLBACK_ABOUT.skills).map((s, i) => (
-                <div className="skill-item si" key={i}>
+                <div className="skill-item si" key={i} data-skill-index={i}>
                   <div className="skill-icon" />
                   <span className="skill-name">{s.name}</span>
                   <span className="skill-note">{s.years}</span>

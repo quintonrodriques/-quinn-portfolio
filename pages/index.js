@@ -621,6 +621,24 @@ export default function Home({ uiProjects, uxProjects, about }) {
       o.style.transition = 'none'
       o.style.opacity = '0'
     })
+
+    // Load Space Grotesk and swap hero font
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap'
+    document.head.appendChild(link)
+
+    const heroWords = ['hw-organic', 'hw-solutions', 'hw-through', 'hw-digital']
+    link.onload = () => {
+      heroWords.forEach(id => {
+        const el = document.getElementById(id)
+        if (!el) return
+        el.style.fontFamily = "'Space Grotesk', sans-serif"
+        el.style.fontWeight = '700'
+        el.style.letterSpacing = '-0.01em'
+        el.style.textTransform = 'uppercase'
+      })
+    }
   }
 
   // Scroll reveal

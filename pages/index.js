@@ -604,13 +604,13 @@ export default function Home({ uiProjects, uxProjects, about }) {
     class Streak {
       constructor() { this.reset(true) }
       reset(init = false) {
-        this.x = init ? Math.random() * canvas.width : -200
+        this.x = init ? Math.random() * canvas.width : -600
         this.y = Math.random() * canvas.height
-        this.len = 40 + Math.random() * 130
+        this.len = 180 + Math.random() * 400   // much longer
         this.speed = 5 + Math.random() * 14
-        this.width = 0.8 + Math.random() * 2
+        this.width = 1.5 + Math.random() * 3.5  // thicker
         this.color = bColors[Math.floor(Math.random() * bColors.length)]
-        this.opacity = 0.45 + Math.random() * 0.55
+        this.opacity = 0.7 + Math.random() * 0.3  // brighter
         this.vy = (Math.random() - 0.5) * 1.2
       }
       draw(alpha) {
@@ -619,14 +619,22 @@ export default function Home({ uiProjects, uxProjects, about }) {
         this.y += this.vy
         if (this.y < 0 || this.y > canvas.height) this.vy *= -1
         if (this.x > canvas.width + this.len) this.reset()
+        // Long smearing tail — color holds bright for most of the length, fades only at the very end
         const g = ctx.createLinearGradient(this.x - this.len, this.y, this.x, this.y)
         g.addColorStop(0, 'transparent')
+        g.addColorStop(0.15, this.color + Math.round(this.opacity * alpha * 0.3 * 255).toString(16).padStart(2,'0'))
         g.addColorStop(0.5, this.color + Math.round(this.opacity * alpha * 255).toString(16).padStart(2,'0'))
+        g.addColorStop(0.85, this.color + Math.round(this.opacity * alpha * 255).toString(16).padStart(2,'0'))
         g.addColorStop(1, 'transparent')
         ctx.save()
-        ctx.shadowBlur = 14; ctx.shadowColor = this.color
+        ctx.shadowBlur = 22; ctx.shadowColor = this.color
         ctx.strokeStyle = g; ctx.lineWidth = this.width
         ctx.beginPath(); ctx.moveTo(this.x - this.len, this.y); ctx.lineTo(this.x, this.y); ctx.stroke()
+        // Second thinner core for glow intensity
+        ctx.lineWidth = this.width * 0.4
+        ctx.globalAlpha = alpha * 0.6
+        ctx.strokeStyle = '#ffffff'
+        ctx.beginPath(); ctx.moveTo(this.x - this.len * 0.4, this.y); ctx.lineTo(this.x, this.y); ctx.stroke()
         ctx.restore()
       }
     }

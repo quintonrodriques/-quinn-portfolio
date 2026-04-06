@@ -445,7 +445,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         cards[targetIndex].classList.add('skill-powered')
         activatedCards++
       }
-      if (activatedCards >= totalCards) {
+      if (activatedCards >= 1) {
         blackHoleDisabled = true
         showApproachHeading()
       }
@@ -507,12 +507,8 @@ export default function Home({ uiProjects, uxProjects, about }) {
       setTimeout(() => {
         const el = document.getElementById(id)
         if (!el) return
-        el.style.transition = 'opacity 0.3s ease'
-        el.style.opacity = '0'
-        setTimeout(() => {
-          el.textContent = newText
-          el.style.opacity = '1'
-        }, 300)
+        el.style.transition = 'none'
+        el.textContent = newText
       }, 1000 + delay)
     }
 
@@ -520,20 +516,18 @@ export default function Home({ uiProjects, uxProjects, about }) {
     swapWord('hw-solutions', 'should', 500)
     swapWord('hw-through', 'feel', 1000)
 
-    // "digital interfaces." → "fun."
+    // "digital interfaces." → "fun." — each on own line
     setTimeout(() => {
       const digital = document.getElementById('hw-digital')
       const interfaces = document.getElementById('hw-interfaces')
       if (digital && interfaces) {
-        digital.style.transition = 'opacity 0.3s ease'
-        digital.style.opacity = '0'
-        interfaces.style.transition = 'opacity 0.3s ease'
-        interfaces.style.opacity = '0'
-        setTimeout(() => {
-          digital.textContent = 'fun.'
-          digital.style.opacity = '1'
-          interfaces.textContent = ''
-        }, 300)
+        digital.style.transition = 'none'
+        interfaces.style.transition = 'none'
+        digital.textContent = 'fun.'
+        digital.classList.remove('outline-word')
+        interfaces.textContent = ''
+        // hide empty line-outline wrapper
+        if (interfaces.parentElement) interfaces.parentElement.style.display = 'none'
       }
       startRacingBackground()
     }, 1000 + 1750)

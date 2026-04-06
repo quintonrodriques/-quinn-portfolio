@@ -451,9 +451,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
       const navMenu = document.getElementById('navMenu')
       const approach = document.getElementById('navApproach')
       if (navMenu) navMenu.classList.add('approach-active')
-      setTimeout(() => {
-        if (approach) approach.classList.add('approach-visible')
-      }, 300)
+      if (approach) approach.classList.add('approach-visible')
     }
 
     function toggleFreakout() {

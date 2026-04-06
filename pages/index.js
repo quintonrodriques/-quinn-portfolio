@@ -781,6 +781,23 @@ export default function Home({ uiProjects, uxProjects, about }) {
     }
   }
 
+  // Footer logo cascade — desktop only
+  useEffect(() => {
+    if (window.innerWidth <= 900) return
+    const logo = document.getElementById('footerLogo')
+    if (!logo) return
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          logo.querySelectorAll('.footer-logo-char').forEach(ch => ch.classList.add('char-in'))
+          obs.disconnect()
+        }
+      })
+    }, { threshold: 0.8 })
+    obs.observe(logo)
+    return () => obs.disconnect()
+  }, [])
+
   // Scroll reveal
   useEffect(() => {
     const els = document.querySelectorAll('.r')
@@ -951,7 +968,13 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
       {/* FOOTER */}
       <footer>
-        <div className="footer-logo"></div>
+        <div className="footer-logo" id="footerLogo">
+          {'Feed the form'.split('').map((ch, i) => (
+            <span key={i} className="footer-logo-char" style={{ transitionDelay: `${i * 0.06}s` }}>
+              {ch === ' ' ? '\u00A0' : ch}
+            </span>
+          ))}
+        </div>
         <ul className="footer-nav">
           <li><a href="https://www.linkedin.com/in/quintonrodriques/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
           <li><a href="/QuinnRodriques_Resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a></li>

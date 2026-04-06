@@ -740,6 +740,12 @@ footer {
   position: relative; z-index: 1; transition: border-color var(--transition);
 }
 .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; color: var(--muted); }
+.footer-logo-char {
+  display: inline-block;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.footer-logo-char.char-in { opacity: 1; }
 .footer-nav { display: flex; gap: 28px; list-style: none; }
 .footer-nav a { color: var(--muted); text-decoration: none; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s; }
 .footer-nav a:hover { color: var(--accent); }

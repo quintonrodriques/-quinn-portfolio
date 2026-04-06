@@ -309,25 +309,65 @@ export default function Home({ uiProjects, uxProjects, about }) {
   useEffect(() => {
     const cursor = document.getElementById('customCursor')
     const dot = cursor?.querySelector('.cursor-dot')
-    if (!cursor || !dot) return
+    const ring = cursor?.querySelector('.cursor-ring')
+    if (!cursor || !dot || !ring) return
 
-    let mouseX = 0, mouseY = 0
-    let dotX = 0, dotY = 0
-    let rafId
+    let mouseX = 0, mouseY = 0, dotX = 0, dotY = 0
+    let isFreakout = false
+    let lastX = 0, dirChanges = 0, lastDir = 0, lastDirTime = 0
+    const SHAKE_THRESHOLD = 6, SHAKE_WINDOW = 750, SHAKES_NEEDED = 6
 
     const move = e => {
       mouseX = e.clientX
       mouseY = e.clientY
       cursor.style.left = mouseX + 'px'
       cursor.style.top = mouseY + 'px'
+
+      const dx = e.clientX - lastX
+      if (Math.abs(dx) > SHAKE_THRESHOLD) {
+        const dir = dx > 0 ? 1 : -1
+        const now = Date.now()
+        if (dir !== lastDir) {
+          if (now - lastDirTime > SHAKE_WINDOW) dirChanges = 0
+          dirChanges++
+          lastDirTime = now
+          lastDir = dir
+          if (dirChanges >= SHAKES_NEEDED) {
+            dirChanges = 0
+            toggleFreakout()
+          }
+        }
+      }
+      lastX = e.clientX
     }
 
+    function toggleFreakout() {
+      if (!isFreakout) {
+        isFreakout = true
+        cursor.classList.add('freakout')
+        setTimeout(() => {
+          dot.style.animation = 'none'
+          dot.style.opacity = '0'
+        }, 600)
+      } else {
+        isFreakout = false
+        cursor.classList.remove('freakout')
+        cursor.classList.add('recovering')
+        dot.style.animation = 'none'
+        dot.style.opacity = '1'
+        dot.style.transform = 'translate(-50%, -50%)'
+        setTimeout(() => cursor.classList.remove('recovering'), 400)
+      }
+    }
+
+    let rafId
     const animateDot = () => {
       dotX += (mouseX - dotX) * 0.18
       dotY += (mouseY - dotY) * 0.18
-      const offsetX = dotX - mouseX
-      const offsetY = dotY - mouseY
-      dot.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`
+      if (!isFreakout) {
+        const ox = dotX - mouseX, oy = dotY - mouseY
+        dot.style.transform = `translate(calc(-50% + ${ox}px), calc(-50% + ${oy}px))`
+      }
       rafId = requestAnimationFrame(animateDot)
     }
     rafId = requestAnimationFrame(animateDot)
@@ -335,7 +375,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
     const hover = () => cursor.classList.add('hovering')
     const unhover = () => cursor.classList.remove('hovering')
     window.addEventListener('mousemove', move)
-    document.querySelectorAll('a, button, [onClick], .pcard, .toggle-wrap').forEach(el => {
+    document.querySelectorAll('a, button, .pcard, .toggle-wrap').forEach(el => {
       el.addEventListener('mouseenter', hover)
       el.addEventListener('mouseleave', unhover)
     })

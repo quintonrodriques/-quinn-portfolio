@@ -160,6 +160,9 @@ html { scroll-behavior: smooth; }
 /* Approach heading in about section — hidden now that it's in nav */
 .approach-heading { display: none; }
 
+/* Racing canvas bg */
+#racingCanvas { mix-blend-mode: screen; }
+
 body {
   font-family: 'Syne', sans-serif;
   background: var(--bg);

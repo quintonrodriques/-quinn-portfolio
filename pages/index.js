@@ -499,6 +499,125 @@ export default function Home({ uiProjects, uxProjects, about }) {
     }
   }, [])
 
+  // Approach sequence
+  const triggerApproachSequence = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+
+    const swapWord = (id, newText, delay) => {
+      setTimeout(() => {
+        const el = document.getElementById(id)
+        if (!el) return
+        el.style.transition = 'opacity 0.3s ease'
+        el.style.opacity = '0'
+        setTimeout(() => {
+          el.textContent = newText
+          el.style.opacity = '1'
+        }, 300)
+      }, 1000 + delay)
+    }
+
+    swapWord('hw-organic', 'Design', 0)
+    swapWord('hw-solutions', 'should', 500)
+    swapWord('hw-through', 'feel', 1000)
+
+    // "digital interfaces." → "fun."
+    setTimeout(() => {
+      const digital = document.getElementById('hw-digital')
+      const interfaces = document.getElementById('hw-interfaces')
+      if (digital && interfaces) {
+        digital.style.transition = 'opacity 0.3s ease'
+        digital.style.opacity = '0'
+        interfaces.style.transition = 'opacity 0.3s ease'
+        interfaces.style.opacity = '0'
+        setTimeout(() => {
+          digital.textContent = 'fun.'
+          digital.style.opacity = '1'
+          interfaces.textContent = ''
+        }, 300)
+      }
+      startRacingBackground()
+    }, 1000 + 1750)
+  }
+
+  const startRacingBackground = () => {
+    const existing = document.getElementById('racingCanvas')
+    if (existing) return
+    const canvas = document.createElement('canvas')
+    canvas.id = 'racingCanvas'
+    canvas.style.cssText = `
+      position: fixed; inset: 0; z-index: -1;
+      pointer-events: none; opacity: 0;
+      transition: opacity 1.2s ease;
+    `
+    document.body.appendChild(canvas)
+    const ctx = canvas.getContext('2d')
+
+    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight }
+    resize()
+    window.addEventListener('resize', resize)
+
+    // Streaks — racing lights
+    const colors = [
+      'rgba(180,120,255,', // soft purple
+      'rgba(80,220,180,',  // mint
+      'rgba(255,160,80,',  // amber
+      'rgba(60,180,255,',  // blue
+      'rgba(255,100,160,', // pink
+    ]
+
+    class Streak {
+      constructor() { this.reset(true) }
+      reset(init = false) {
+        this.x = init ? Math.random() * canvas.width : -200
+        this.y = Math.random() * canvas.height
+        this.length = 80 + Math.random() * 220
+        this.speed = 3 + Math.random() * 6
+        this.width = 0.5 + Math.random() * 1.5
+        this.color = colors[Math.floor(Math.random() * colors.length)]
+        this.opacity = 0.04 + Math.random() * 0.1
+        this.curve = (Math.random() - 0.5) * 0.8
+        this.vy = (Math.random() - 0.5) * 0.4
+      }
+      draw() {
+        ctx.save()
+        const grad = ctx.createLinearGradient(this.x - this.length, this.y, this.x, this.y)
+        grad.addColorStop(0, this.color + '0)')
+        grad.addColorStop(0.5, this.color + this.opacity + ')')
+        grad.addColorStop(1, this.color + '0)')
+        ctx.strokeStyle = grad
+        ctx.lineWidth = this.width
+        ctx.beginPath()
+        ctx.moveTo(this.x - this.length, this.y)
+        ctx.quadraticCurveTo(
+          this.x - this.length / 2,
+          this.y + this.curve * 20,
+          this.x, this.y
+        )
+        ctx.stroke()
+        ctx.restore()
+        this.x += this.speed
+        this.y += this.vy
+        if (this.x > canvas.width + 200) this.reset()
+      }
+    }
+
+    const streaks = Array.from({ length: 60 }, () => new Streak())
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      streaks.forEach(s => s.draw())
+      requestAnimationFrame(animate)
+    }
+    animate()
+
+    // Fade in after short delay
+    setTimeout(() => { canvas.style.opacity = '1' }, 100)
+
+    // Darken body bg
+    document.body.style.transition = 'background 1.5s ease'
+    document.body.style.background = '#0A0810'
+  }
+
   // Scroll reveal
   useEffect(() => {
     const els = document.querySelectorAll('.r')
@@ -568,7 +687,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
           <li><a href="#work">Work</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="mailto:hi@quxnn.com">Contact</a></li>
-          <li className="nav-approach" id="navApproach"><a href="#about">My Approach</a></li>
+          <li className="nav-approach" id="navApproach"><a href="#" onClick={e => { e.preventDefault(); triggerApproachSequence() }}>My Approach</a></li>
         </ul>
         <div style={{ position: 'relative', display: 'inline-flex' }}>
           <div className="toggle-ping-ring" id="togglePingRing" />
@@ -580,17 +699,17 @@ export default function Home({ uiProjects, uxProjects, about }) {
       </nav>
 
       {/* HERO */}
-      <section className="hero">
+      <section className="hero" id="heroSection">
         <div className="hero-tag">
           <div className="hero-tag-dot" />
           <span className="hero-tag-text">{bio.availability || 'Available for Projects — 2026'}</span>
         </div>
         <h1 className="hero-title">
-          <span className="hw hw-1">Organic</span> <span className="hw hw-4">solutions</span><br />
-          <span className="line-em"><span className="hw hw-5">through</span></span>
+          <span className="hw hw-1" id="hw-organic">Organic</span> <span className="hw hw-4" id="hw-solutions">solutions</span><br />
+          <span className="line-em"><span className="hw hw-5" id="hw-through">through</span></span>
           <span className="hero-inline-row">
-            <span className="line-outline"><span className="hw hw-3 outline-word">digital</span></span>
-            <span className="line-outline"><span className="hw hw-2 outline-word">interfaces.</span></span>
+            <span className="line-outline"><span className="hw hw-3 outline-word" id="hw-digital">digital</span></span>
+            <span className="line-outline"><span className="hw hw-2 outline-word" id="hw-interfaces">interfaces.</span></span>
           </span>
         </h1>
         <div className="hero-row">

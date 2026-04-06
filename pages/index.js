@@ -316,6 +316,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
     let mouseX = 0, mouseY = 0, dotX = 0, dotY = 0
     let prevMouseX = 0
     let isFreakout = false
+    let dotInFlight = false
     let lastX = 0, dirChanges = 0, lastDir = 0, lastDirTime = 0
     const SHAKE_THRESHOLD = 6, SHAKE_WINDOW = 750, SHAKES_NEEDED = 6
 
@@ -352,6 +353,8 @@ export default function Home({ uiProjects, uxProjects, about }) {
       let velX = vx, velY = vy
       const gravity = 0.45 + (Math.random() - 0.5) * 0.1
 
+      dotInFlight = true
+
       flyDot.style.left = px + 'px'
       flyDot.style.top = py + 'px'
       flyDot.style.opacity = '1'
@@ -380,6 +383,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
           const dist = Math.hypot(px - periodCX, py - periodCY)
           if (dist < 322 && py > periodCY - 430) {
             sucked = true
+            dotInFlight = false
             cancelAnimationFrame(flyRaf)
             suckIntoPeriod(px, py, periodCX, periodCY)
             return
@@ -388,6 +392,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
         if (py > window.innerHeight + 10 || py < -10 || px < -10 || px > window.innerWidth + 10) {
           flyDot.style.opacity = '0'
+          dotInFlight = false
           cancelAnimationFrame(flyRaf)
           return
         }
@@ -460,7 +465,8 @@ export default function Home({ uiProjects, uxProjects, about }) {
         cursor.classList.add('freakout')
         spawnFlyDot()
       } else {
-        // Square → Circle: no dot, just recover
+        // Square → Circle: only if dot has landed
+        if (dotInFlight) return
         isFreakout = false
         cursor.classList.remove('freakout')
         cursor.classList.add('recovering')

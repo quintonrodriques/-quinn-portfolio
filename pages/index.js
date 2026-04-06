@@ -27,7 +27,7 @@ const FALLBACK_UX = [
 ]
 
 const FALLBACK_ABOUT = {
-  bio: 'While making the design of a system user-centric is my highest priority, the aspect I enjoy most about design is infusing personality into it. A great system is one that feels natural to use and leaves the user enjoying their experience.',
+  bio: 'While every design decision I make starts with the user, I believe the most impactful systems are the ones that carry a distinct personality; ones that feel intuitive to navigate and enjoyable to spend time in.',
   bio2: 'Based in Montreal, available worldwide.',
   availability: 'Available for Projects — 2026',
   skills: [
@@ -576,7 +576,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
       const desc = document.getElementById('heroDesc')
       if (desc) {
         desc.style.transition = 'none'
-        desc.textContent = 'While making the design of a system user-centric is my highest priority, the aspect I enjoy most about design is infusing personality into it. A great system is one that feels natural to use and leaves the user enjoying their experience.'
+        desc.textContent = 'While every design decision I make starts with the user, I believe the most impactful systems are the ones that carry a distinct personality; ones that feel intuitive to navigate and enjoyable to spend time in.'
       }
     }, 1500 + 1750)
   }
@@ -954,7 +954,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         <div className="footer-logo"></div>
         <ul className="footer-nav">
           <li><a href="https://www.linkedin.com/in/quintonrodriques/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-          <li><a href="#">Read.cv</a></li>
+          <li><a href="/QuinnRodriques_Resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a></li>
           <li><a href="mailto:hi@quxnn.com">hi@quxnn.com</a></li>
         </ul>
       </footer>

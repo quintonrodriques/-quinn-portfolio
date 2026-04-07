@@ -397,18 +397,22 @@ export default function Home({ uiProjects, uxProjects, about }) {
       requestAnimationFrame(animateFooterTriangle)
     }
 
+    let footerTriangleScheduled = false
+
     const showShakeHint = () => {
       if (!shakeHint || shakeCount >= MAX_SHAKES) return
       const chars = shakeHint.querySelectorAll('.shake-hint-char')
       chars.forEach((ch, i) => {
         setTimeout(() => ch.classList.add('char-show'), i * 40)
       })
-      // Spawn footer triangle after 3s
-      clearTimeout(footerTriangleTimer)
-      footerTriangleTimer = setTimeout(() => {
-        spawnFooterTriangle()
-        animateFooterTriangle()
-      }, 3000)
+      // Spawn footer triangle after 3s — only schedule once ever
+      if (!footerTriangleScheduled && !footerTriangleActive) {
+        footerTriangleScheduled = true
+        footerTriangleTimer = setTimeout(() => {
+          spawnFooterTriangle()
+          animateFooterTriangle()
+        }, 3000)
+      }
     }
     const hideShakeHint = () => {
       if (!shakeHint) return
@@ -417,7 +421,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
       chars.forEach((ch, i) => {
         setTimeout(() => ch.classList.remove('char-show'), (total - 1 - i) * 30)
       })
-      clearTimeout(footerTriangleTimer)
+      // Do NOT clear footerTriangleTimer — let it fire regardless of hover state
     }
 
     // Footer logo hover — glow and remove triangle

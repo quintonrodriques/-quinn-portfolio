@@ -586,7 +586,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
       if (digital && interfaces) {
         digital.style.transition = 'none'
         interfaces.style.transition = 'none'
-        digital.textContent = 'fun.'
+        digital.textContent = 'fun'
         digital.classList.remove('outline-word')
         interfaces.textContent = ''
         // hide empty line-outline wrapper

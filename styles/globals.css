@@ -818,7 +818,7 @@ footer {
   .about-inner { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }
   footer { padding: 30px 24px; flex-direction: column; gap: 20px; }
   body.approach-active .hero-desc { max-width: 100%; text-align: center; }
-  body.approach-active .hero-title { padding-top: 40px; }
+  body.approach-active .hero-title { padding-top: 40px; font-size: clamp(64px, 18vw, 110px); padding-bottom: 48px; }
 
   /* White flash overlay */
   .approach-flash {

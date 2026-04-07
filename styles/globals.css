@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Syne:wght@400;600;700;800&family=Syne+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@400;700&family=Syne:wght@400;600;700;800&family=Syne+Mono&display=swap');
 
 :root {
   --ui-bg: #13111A;
@@ -64,6 +64,22 @@ html { scroll-behavior: smooth; }
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
 }
+
+/* Orbiting triangle */
+.cursor-triangle {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 7px solid rgba(255,255,255,0.85);
+  transform-origin: 0 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.custom-cursor.freakout .cursor-triangle,
+.custom-cursor.triangle-hidden .cursor-triangle { opacity: 0; }
+
 .custom-cursor.hovering .cursor-ring {
   width: 36px; height: 36px;
   border-color: rgba(255,255,255,0.5);
@@ -84,6 +100,26 @@ html { scroll-behavior: smooth; }
   border-radius: 50%;
   animation: none;
   transition: border-radius 0.4s ease, width 0.3s ease, height 0.3s ease;
+}
+
+/* Shake it off text */
+.shake-hint {
+  display: flex; flex-direction: column; align-items: flex-end;
+  margin-top: 6px;
+  overflow: hidden;
+}
+.shake-hint-char {
+  display: inline-block;
+  font-family: 'Syne Mono', monospace;
+  font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0;
+  transform: translateX(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.shake-hint-char.char-show {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* Flying dot — fixed, JS physics driven */
@@ -193,7 +229,7 @@ html { scroll-behavior: smooth; }
 .approach-heading { display: none; }
 
 /* Glassy state after approach sequence */
-body.approach-active .projects-title { font-family: 'Syne', sans-serif; font-weight: 800; font-style: normal; letter-spacing: -0.02em; }
+body.approach-active .projects-title { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: normal; letter-spacing: -0.02em; }
 body.approach-active .disclaimer-banner {
   background: rgba(255,255,255,0.04);
   border-bottom-color: rgba(255,255,255,0.08);

@@ -310,6 +310,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
     const cursor = document.getElementById('customCursor')
     const dot = cursor?.querySelector('.cursor-dot')
     const ring = cursor?.querySelector('.cursor-ring')
+    const triangle = document.getElementById('cursorTriangle')
     const flyDot = document.getElementById('cursorDotFly')
     if (!cursor || !dot || !ring || !flyDot) return
 
@@ -317,8 +318,60 @@ export default function Home({ uiProjects, uxProjects, about }) {
     let prevMouseX = 0
     let isFreakout = false
     let dotInFlight = false
+    let triangleHidden = false
+    let orbitAngle = 0
     let lastX = 0, dirChanges = 0, lastDir = 0, lastDirTime = 0
     const SHAKE_THRESHOLD = 6, SHAKE_WINDOW = 750, SHAKES_NEEDED = 6
+
+    // Orbiting triangle — points toward scroll widget
+    const animateTriangle = () => {
+      if (!triangle || isFreakout || triangleHidden) {
+        requestAnimationFrame(animateTriangle)
+        return
+      }
+      const scrollEl = document.getElementById('heroScroll')
+      if (scrollEl) {
+        const sr = scrollEl.getBoundingClientRect()
+        const targetX = sr.left + sr.width / 2
+        const targetY = sr.top + sr.height / 2
+        const angle = Math.atan2(targetY - mouseY, targetX - mouseX)
+        const r = 18 // orbit radius — just outside the ring
+        const tx = Math.cos(angle) * r
+        const ty = Math.sin(angle) * r
+        // Point the triangle toward the target (base of triangle toward target)
+        const deg = angle * (180 / Math.PI) + 90
+        triangle.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) rotate(${deg}deg)`
+      }
+      requestAnimationFrame(animateTriangle)
+    }
+    animateTriangle()
+
+    // Shake hint on scroll widget hover
+    const scrollEl = document.getElementById('heroScroll')
+    const shakeHint = document.getElementById('shakeHint')
+    let shakeTimeout = null
+
+    const showShakeHint = () => {
+      if (!shakeHint) return
+      const chars = shakeHint.querySelectorAll('.shake-hint-char')
+      const total = chars.length
+      chars.forEach((ch, i) => {
+        setTimeout(() => ch.classList.add('char-show'), (total - 1 - i) * 40)
+      })
+    }
+    const hideShakeHint = () => {
+      if (!shakeHint) return
+      const chars = shakeHint.querySelectorAll('.shake-hint-char')
+      const total = chars.length
+      chars.forEach((ch, i) => {
+        setTimeout(() => ch.classList.remove('char-show'), i * 30)
+      })
+    }
+
+    if (scrollEl) {
+      scrollEl.addEventListener('mouseenter', showShakeHint)
+      scrollEl.addEventListener('mouseleave', hideShakeHint)
+    }
 
     const move = e => {
       prevMouseX = mouseX
@@ -482,9 +535,11 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
     function toggleFreakout() {
       if (!isFreakout) {
-        // Circle → Square: spawn dot
+        // Circle → Square: spawn dot, hide triangle permanently
         isFreakout = true
+        triangleHidden = true
         cursor.classList.add('freakout')
+        cursor.classList.add('triangle-hidden')
         spawnFlyDot()
       } else {
         // Square → Circle: only if dot has landed
@@ -866,6 +921,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
       <div className="custom-cursor" id="customCursor">
         <div className="cursor-ring" />
         <div className="cursor-dot" />
+        <div className="cursor-triangle" id="cursorTriangle" />
       </div>
       <div className="cursor-dot-fly" id="cursorDotFly" />
       <div className="approach-flash" id="approachFlash" />
@@ -942,9 +998,16 @@ export default function Home({ uiProjects, uxProjects, about }) {
           <p className="hero-desc" id="heroDesc">
             Quinn is a UI/UX designer crafting digital experiences that feel effortless to use and beautiful to inhabit. Based in {bio.location || 'Montreal'}.
           </p>
-          <div className="hero-scroll">
+          <div className="hero-scroll" id="heroScroll">
             <div className="hero-scroll-line" />
             <span>Scroll</span>
+            <div className="shake-hint" id="shakeHint">
+              {'Shake it off'.split('').map((ch, i) => (
+                <span key={i} className="shake-hint-char" data-idx={i}>
+                  {ch === ' ' ? '\u00A0' : ch}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </section>

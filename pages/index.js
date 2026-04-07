@@ -461,6 +461,20 @@ export default function Home({ uiProjects, uxProjects, about }) {
       setTimeout(() => {
         if (approach && !approach.classList.contains('approach-clicked')) {
           approach.classList.add('approach-ping')
+
+          // Spawn ripple centered on the My Approach item
+          const nav = document.querySelector('nav')
+          if (nav && approach) {
+            const navRect = nav.getBoundingClientRect()
+            const approachRect = approach.getBoundingClientRect()
+            const rippleX = ((approachRect.left + approachRect.width / 2 - navRect.left) / navRect.width * 100) + '%'
+            const ripple = document.createElement('div')
+            ripple.className = 'nav-ripple'
+            ripple.style.setProperty('--ripple-x', rippleX)
+            nav.appendChild(ripple)
+            setTimeout(() => ripple.remove(), 1800)
+          }
+
           setTimeout(() => approach.classList.remove('approach-ping'), 3600)
         }
       }, 5000)
@@ -584,7 +598,13 @@ export default function Home({ uiProjects, uxProjects, about }) {
       const desc = document.getElementById('heroDesc')
       if (desc) {
         desc.style.transition = 'none'
-        desc.textContent = 'What excites me most about design is something that often gets overlooked: the character of an interface. Whether you\'re building a banking app or a AAA title, there\'s almost always room to make the experience feel impactful. You don\'t need to sacrifice professionalism or accessibility to make the experience enjoyable. I infuse this philosophy in all of my work — using motion that makes interactions feel tactile and alive, moments of surprise, and a belief that the best systems reflect a little of the user\'s humanity back at them. From ideation to execution, the goal is the feeling a user walks away with. Not just "this works", but "I actually liked using that."'
+        desc.innerHTML = 'What excites me most about design is something that often gets overlooked: the character of an interface. Whether you\'re building a banking app or a AAA title, there\'s almost always room to make the experience feel impactful. You don\'t need to sacrifice professionalism or accessibility to make the experience enjoyable.<br><br>I infuse this philosophy in all of my work — using motion that makes interactions feel tactile and alive, moments of surprise, and a belief that the best systems reflect a little of the user\'s humanity back at them. From ideation to execution, the goal is the feeling a user walks away with. Not just "this works", but "I actually liked using that."'
+      }
+
+      // Hide scroll widget on mobile so text centers
+      if (window.innerWidth <= 900) {
+        const heroScroll = document.querySelector('.hero-scroll')
+        if (heroScroll) heroScroll.style.display = 'none'
       }
     }, 1500 + 1750)
   }

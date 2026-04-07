@@ -576,7 +576,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
       const desc = document.getElementById('heroDesc')
       if (desc) {
         desc.style.transition = 'none'
-        desc.textContent = 'What excites me most about design is something that often gets overlooked: the character of an interface. Whether you\'re building a banking app or a AAA title, there\'s almost always room to make the experience feel impactful. You don\'t need to sacrifice professionalism or accessibility to make the experience enjoyable. I infuse this philosophy in all of my work — using motion that makes interactions feel tactile and alive, moments of surprise, and a belief that the best systems reflect a little of the user\'s humanity back at them. From ideation to execution, the goal is the feeling a user walks away with. Not just "this works", but "I actually liked using that."'
+        desc.textContent = 'What excites me most about design is something that often gets overlooked: the character of an interface. Whether you\'re building a banking app or a AAA title, there\'s almost always room to make the experience feel impactful. You don\'t need to sacrifice professionalism or accessibility to make the experience enjoyable. I infuse this philosophy in all of my work. Using motion that makes interactions feel tactile and alive. Moments of surprise. Humans are messy and funny and imperfect, I think the best systems reflect a little of that back. From ideation to execution, the goal is the feeling a user walks away with. Not just "this works", but "I actually liked using that."'
       }
     }, 1500 + 1750)
   }
@@ -758,6 +758,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
     requestAnimationFrame(() => { canvas.style.opacity = '1' })
     document.body.style.transition = 'none'
     document.body.style.background = '#000a04'
+    document.body.classList.add('approach-active')
     document.querySelectorAll('.orb').forEach(o => {
       o.style.transition = 'none'
       o.style.opacity = '0'

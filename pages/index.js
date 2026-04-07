@@ -377,8 +377,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
     // Animate footer triangle — runs in parallel with main triangle loop
     const animateFooterTriangle = () => {
-      if (!footerTriangle || isFreakout) {
-        if (footerTriangle) requestAnimationFrame(animateFooterTriangle)
+      if (!footerTriangle) {
         return
       }
       const footerLogo = document.getElementById('footerLogo')

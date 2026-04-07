@@ -193,6 +193,7 @@ html { scroll-behavior: smooth; }
 .approach-heading { display: none; }
 
 /* Glassy state after approach sequence */
+body.approach-active .projects-title { font-family: 'Syne', sans-serif; font-weight: 800; font-style: normal; letter-spacing: -0.02em; }
 body.approach-active .disclaimer-banner {
   background: rgba(255,255,255,0.04);
   border-bottom-color: rgba(255,255,255,0.08);
@@ -818,7 +819,7 @@ footer {
   .about-inner { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }
   footer { padding: 30px 24px; flex-direction: column; gap: 20px; }
   body.approach-active .hero-desc { max-width: 100%; text-align: center; }
-  body.approach-active .hero-title { padding-top: 40px; font-size: clamp(64px, 18vw, 110px); padding-bottom: 48px; }
+  body.approach-active .hero-title { padding-top: 40px; font-size: clamp(52px, 14vw, 90px); padding-bottom: 48px; }
 
   /* White flash overlay */
   .approach-flash {

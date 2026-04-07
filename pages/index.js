@@ -353,22 +353,83 @@ export default function Home({ uiProjects, uxProjects, about }) {
     // Shake hint on scroll widget hover
     const scrollEl = document.getElementById('heroScroll')
     const shakeHint = document.getElementById('shakeHint')
+    let footerTriangle = null
+    let footerTriangleActive = false
+    let footerTriangleTimer = null
+
+    const spawnFooterTriangle = () => {
+      if (footerTriangle || footerTriangleActive) return
+      footerTriangleActive = true
+      const tri = document.createElement('div')
+      tri.className = 'cursor-triangle cursor-triangle-footer'
+      tri.id = 'cursorTriangleFooter'
+      cursor.appendChild(tri)
+      footerTriangle = tri
+    }
+
+    const removeFooterTriangle = () => {
+      if (footerTriangle) {
+        footerTriangle.remove()
+        footerTriangle = null
+      }
+      footerTriangleActive = false
+    }
+
+    // Animate footer triangle — runs in parallel with main triangle loop
+    const animateFooterTriangle = () => {
+      if (!footerTriangle || isFreakout) {
+        if (footerTriangle) requestAnimationFrame(animateFooterTriangle)
+        return
+      }
+      const footerLogo = document.getElementById('footerLogo')
+      if (footerLogo) {
+        const fr = footerLogo.getBoundingClientRect()
+        const targetX = fr.left + fr.width / 2
+        const targetY = fr.top + fr.height / 2
+        const angle = Math.atan2(targetY - mouseY, targetX - mouseX)
+        const r = 16
+        const tx = Math.cos(angle) * r
+        const ty = Math.sin(angle) * r
+        const deg = angle * (180 / Math.PI) + 90
+        footerTriangle.style.left = `calc(50% + ${tx}px)`
+        footerTriangle.style.top = `calc(50% + ${ty}px)`
+        footerTriangle.style.transform = `translate(-50%, -50%) rotate(${deg}deg)`
+      }
+      requestAnimationFrame(animateFooterTriangle)
+    }
 
     const showShakeHint = () => {
       if (!shakeHint || shakeCount >= MAX_SHAKES) return
       const chars = shakeHint.querySelectorAll('.shake-hint-char')
-      // Left to right cascade (index 0 first)
       chars.forEach((ch, i) => {
         setTimeout(() => ch.classList.add('char-show'), i * 40)
       })
+      // Spawn footer triangle after 3s
+      clearTimeout(footerTriangleTimer)
+      footerTriangleTimer = setTimeout(() => {
+        spawnFooterTriangle()
+        animateFooterTriangle()
+      }, 3000)
     }
     const hideShakeHint = () => {
       if (!shakeHint) return
       const chars = shakeHint.querySelectorAll('.shake-hint-char')
-      // Right to left fade out (last index first)
       const total = chars.length
       chars.forEach((ch, i) => {
         setTimeout(() => ch.classList.remove('char-show'), (total - 1 - i) * 30)
+      })
+      clearTimeout(footerTriangleTimer)
+    }
+
+    // Footer logo hover — glow and remove triangle
+    const footerLogoEl = document.getElementById('footerLogo')
+    if (footerLogoEl) {
+      footerLogoEl.addEventListener('mouseenter', () => {
+        footerLogoEl.classList.add('footer-logo-glow')
+        if (footerTriangle) removeFooterTriangle()
+      })
+      footerLogoEl.addEventListener('mouseleave', () => {
+        footerLogoEl.classList.remove('footer-logo-glow')
       })
     }
 

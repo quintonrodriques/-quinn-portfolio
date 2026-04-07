@@ -78,6 +78,24 @@ html { scroll-behavior: smooth; }
 .custom-cursor.freakout .cursor-triangle,
 .custom-cursor.triangle-hidden .cursor-triangle { opacity: 0; }
 
+/* Footer triangle — slightly different style */
+.cursor-triangle-footer {
+  border-bottom-color: rgba(255,255,255,0.5);
+  border-left-width: 3px;
+  border-right-width: 3px;
+  border-bottom-width: 5px;
+}
+
+/* Footer logo glow on hover */
+.footer-logo-glow {
+  color: #ffffff !important;
+  text-shadow:
+    0 0 12px rgba(255,255,255,0.9),
+    0 0 30px rgba(255,255,255,0.5),
+    0 0 60px rgba(255,255,255,0.2);
+  transition: color 0.3s ease, text-shadow 0.3s ease !important;
+}
+
 .custom-cursor.hovering .cursor-ring {
   width: 36px; height: 36px;
   border-color: rgba(255,255,255,0.5);
@@ -823,7 +841,7 @@ footer {
   display: flex; align-items: center; justify-content: space-between;
   position: relative; z-index: 1; transition: border-color var(--transition);
 }
-.footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; color: var(--muted); }
+.footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; color: var(--muted); transition: color 0.3s ease, text-shadow 0.3s ease; }
 .footer-logo-char {
   display: inline-block;
   opacity: 0;

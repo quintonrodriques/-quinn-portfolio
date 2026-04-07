@@ -594,6 +594,17 @@ export default function Home({ uiProjects, uxProjects, about }) {
       }
       startRacingBackground()
 
+      // White flash on mobile
+      if (window.innerWidth <= 900) {
+        const flash = document.getElementById('approachFlash')
+        if (flash) {
+          flash.classList.remove('flash-in')
+          void flash.offsetWidth
+          flash.classList.add('flash-in')
+          setTimeout(() => flash.classList.remove('flash-in'), 800)
+        }
+      }
+
       // Update hero description text
       const desc = document.getElementById('heroDesc')
       if (desc) {
@@ -857,6 +868,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         <div className="cursor-dot" />
       </div>
       <div className="cursor-dot-fly" id="cursorDotFly" />
+      <div className="approach-flash" id="approachFlash" />
       <div className="orb orb-1" />
       <div className="orb orb-2" />
 

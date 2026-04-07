@@ -818,6 +818,23 @@ footer {
   .about-inner { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }
   footer { padding: 30px 24px; flex-direction: column; gap: 20px; }
   body.approach-active .hero-desc { max-width: 100%; text-align: center; }
+  body.approach-active .hero-title { padding-top: 40px; }
+
+  /* White flash overlay */
+  .approach-flash {
+    position: fixed; inset: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  .approach-flash.flash-in {
+    animation: flashFade 0.8s ease-out forwards;
+  }
+  @keyframes flashFade {
+    0%   { opacity: 1; }
+    100% { opacity: 0; }
+  }
 
   /* Hide custom cursor on mobile */
   .custom-cursor, .cursor-dot-fly { display: none !important; }

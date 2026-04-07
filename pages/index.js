@@ -572,13 +572,12 @@ export default function Home({ uiProjects, uxProjects, about }) {
       }
       startRacingBackground()
 
-      // Switch to split layout — hide old desc/scroll, show approach text
-      const heroRow = document.getElementById('heroRow')
-      const heroApproach = document.getElementById('heroApproachText')
-      const heroSection = document.getElementById('heroSection')
-      if (heroRow) heroRow.style.display = 'none'
-      if (heroApproach) heroApproach.classList.add('approach-text-visible')
-      if (heroSection) heroSection.classList.add('hero-split')
+      // Update hero description text
+      const desc = document.getElementById('heroDesc')
+      if (desc) {
+        desc.style.transition = 'none'
+        desc.textContent = 'What excites me most about design is something that often gets overlooked: the character of an interface. Whether you\'re building a banking app or a AAA title, there\'s almost always room to make the experience feel impactful. You don\'t need to sacrifice professionalism or accessibility to make the experience enjoyable. I infuse this philosophy in all of my work — using motion that makes interactions feel tactile and alive, moments of surprise, and a belief that the best systems reflect a little of the user\'s humanity back at them. From ideation to execution, the goal is the feeling a user walks away with. Not just "this works", but "I actually liked using that."'
+      }
     }, 1500 + 1750)
   }
 
@@ -902,11 +901,6 @@ export default function Home({ uiProjects, uxProjects, about }) {
             <div className="hero-scroll-line" />
             <span>Scroll</span>
           </div>
-        </div>
-        <div className="hero-approach-text" id="heroApproachText">
-          <p>Ten years in UX, starting in tech and eventually finding my home in games. What excites me most about design is something a lot of people overlook: the character of an interface. Whether you're building a banking app or a AAA title, there's almost always room to make the experience feel like something. Professional, accessible, and still genuinely enjoyable.</p>
-          <p>Motion that makes interactions feel tactile and alive. Moments of surprise. Humans are messy and funny and the best systems reflect a little of that back.</p>
-          <p>From ideation to execution, I care about the feeling a user walks away with. Not just "this works" — but "I actually liked using that."</p>
         </div>
       </section>
 

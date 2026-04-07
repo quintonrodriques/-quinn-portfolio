@@ -318,12 +318,24 @@ export default function Home({ uiProjects, uxProjects, about }) {
     let prevMouseX = 0
     let isFreakout = false
     let dotInFlight = false
-    let triangleHidden = false
+    let triangleHidden = true  // hidden until 30s timer fires
     let shakeCount = 0
     const MAX_SHAKES = 5
+    const SCROLL_TRIANGLE_DELAY = 30000
+    const SHAKE_HINT_COUNT_LIMIT = 2  // if shaken more than this before 30s, skip scroll triangle
+    let shakeHintCount = 0  // counts shake-it-off triggers (hover events)
     let orbitAngle = 0
     let lastX = 0, dirChanges = 0, lastDir = 0, lastDirTime = 0
     const SHAKE_THRESHOLD = 6, SHAKE_WINDOW = 750, SHAKES_NEEDED = 6
+
+    // Show scroll triangle after 30s if user hasn't triggered shake hint too many times
+    if (triangle) triangle.style.opacity = '0'
+    setTimeout(() => {
+      if (shakeHintCount <= SHAKE_HINT_COUNT_LIMIT) {
+        triangleHidden = false
+        if (triangle) triangle.style.opacity = ''
+      }
+    }, SCROLL_TRIANGLE_DELAY)
 
     // Orbiting triangle — orbits around center dot
     const animateTriangle = () => {
@@ -337,8 +349,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         const targetX = sr.left + sr.width / 2
         const targetY = sr.top + sr.height / 2
         const angle = Math.atan2(targetY - mouseY, targetX - mouseX)
-        const r = 16 // radius from dot center
-        // Position relative to cursor center (dot is at 50%,50% of cursor)
+        const r = 16
         const tx = Math.cos(angle) * r
         const ty = Math.sin(angle) * r
         const deg = angle * (180 / Math.PI) + 90
@@ -401,17 +412,18 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
     const showShakeHint = () => {
       if (!shakeHint || shakeCount >= MAX_SHAKES) return
+      shakeHintCount++
       const chars = shakeHint.querySelectorAll('.shake-hint-char')
       chars.forEach((ch, i) => {
         setTimeout(() => ch.classList.add('char-show'), i * 40)
       })
-      // Spawn footer triangle after 3s — only schedule once ever
+      // Spawn footer triangle after 30s — only schedule once ever
       if (!footerTriangleScheduled && !footerTriangleActive) {
         footerTriangleScheduled = true
         footerTriangleTimer = setTimeout(() => {
           spawnFooterTriangle()
           animateFooterTriangle()
-        }, 3000)
+        }, 30000)
       }
     }
     const hideShakeHint = () => {

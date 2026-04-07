@@ -325,7 +325,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
     let lastX = 0, dirChanges = 0, lastDir = 0, lastDirTime = 0
     const SHAKE_THRESHOLD = 6, SHAKE_WINDOW = 750, SHAKES_NEEDED = 6
 
-    // Orbiting triangle — points toward scroll widget
+    // Orbiting triangle — orbits around center dot
     const animateTriangle = () => {
       if (!triangle || isFreakout || triangleHidden) {
         requestAnimationFrame(animateTriangle)
@@ -337,11 +337,14 @@ export default function Home({ uiProjects, uxProjects, about }) {
         const targetX = sr.left + sr.width / 2
         const targetY = sr.top + sr.height / 2
         const angle = Math.atan2(targetY - mouseY, targetX - mouseX)
-        const r = 26 // further from center
+        const r = 16 // radius from dot center
+        // Position relative to cursor center (dot is at 50%,50% of cursor)
         const tx = Math.cos(angle) * r
         const ty = Math.sin(angle) * r
         const deg = angle * (180 / Math.PI) + 90
-        triangle.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) rotate(${deg}deg)`
+        triangle.style.left = `calc(50% + ${tx}px)`
+        triangle.style.top = `calc(50% + ${ty}px)`
+        triangle.style.transform = `translate(-50%, -50%) rotate(${deg}deg)`
       }
       requestAnimationFrame(animateTriangle)
     }

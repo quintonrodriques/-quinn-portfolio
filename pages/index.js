@@ -319,6 +319,8 @@ export default function Home({ uiProjects, uxProjects, about }) {
     let isFreakout = false
     let dotInFlight = false
     let triangleHidden = false
+    let shakeCount = 0
+    const MAX_SHAKES = 5
     let orbitAngle = 0
     let lastX = 0, dirChanges = 0, lastDir = 0, lastDirTime = 0
     const SHAKE_THRESHOLD = 6, SHAKE_WINDOW = 750, SHAKES_NEEDED = 6
@@ -335,10 +337,9 @@ export default function Home({ uiProjects, uxProjects, about }) {
         const targetX = sr.left + sr.width / 2
         const targetY = sr.top + sr.height / 2
         const angle = Math.atan2(targetY - mouseY, targetX - mouseX)
-        const r = 18 // orbit radius — just outside the ring
+        const r = 26 // further from center
         const tx = Math.cos(angle) * r
         const ty = Math.sin(angle) * r
-        // Point the triangle toward the target (base of triangle toward target)
         const deg = angle * (180 / Math.PI) + 90
         triangle.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) rotate(${deg}deg)`
       }
@@ -349,22 +350,22 @@ export default function Home({ uiProjects, uxProjects, about }) {
     // Shake hint on scroll widget hover
     const scrollEl = document.getElementById('heroScroll')
     const shakeHint = document.getElementById('shakeHint')
-    let shakeTimeout = null
 
     const showShakeHint = () => {
-      if (!shakeHint) return
+      if (!shakeHint || shakeCount >= MAX_SHAKES) return
       const chars = shakeHint.querySelectorAll('.shake-hint-char')
-      const total = chars.length
+      // Left to right cascade (index 0 first)
       chars.forEach((ch, i) => {
-        setTimeout(() => ch.classList.add('char-show'), (total - 1 - i) * 40)
+        setTimeout(() => ch.classList.add('char-show'), i * 40)
       })
     }
     const hideShakeHint = () => {
       if (!shakeHint) return
       const chars = shakeHint.querySelectorAll('.shake-hint-char')
+      // Right to left fade out (last index first)
       const total = chars.length
       chars.forEach((ch, i) => {
-        setTimeout(() => ch.classList.remove('char-show'), i * 30)
+        setTimeout(() => ch.classList.remove('char-show'), (total - 1 - i) * 30)
       })
     }
 
@@ -538,6 +539,12 @@ export default function Home({ uiProjects, uxProjects, about }) {
         // Circle → Square: spawn dot, hide triangle permanently
         isFreakout = true
         triangleHidden = true
+        shakeCount++
+        // Hide shake hint text once max reached
+        if (shakeCount >= MAX_SHAKES) {
+          const shakeHint = document.getElementById('shakeHint')
+          if (shakeHint) shakeHint.style.display = 'none'
+        }
         cursor.classList.add('freakout')
         cursor.classList.add('triangle-hidden')
         spawnFlyDot()

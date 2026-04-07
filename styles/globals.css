@@ -163,6 +163,42 @@ html { scroll-behavior: smooth; }
 /* Racing canvas bg */
 #racingCanvas { mix-blend-mode: screen; }
 
+/* Hero split layout — triggered after approach sequence */
+.hero-approach-text {
+  display: none;
+  max-width: 420px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.hero-approach-text p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 14px;
+}
+.hero-approach-text p:last-child { margin-bottom: 0; }
+.hero-approach-text.approach-text-visible {
+  display: block;
+  opacity: 1;
+}
+.hero.hero-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  align-items: start;
+  gap: 0 60px;
+}
+.hero.hero-split .hero-tag { grid-column: 1 / -1; }
+.hero.hero-split .hero-title { grid-column: 1; }
+.hero.hero-split .hero-row { display: none; }
+.hero.hero-split .hero-approach-text {
+  grid-column: 2;
+  grid-row: 2;
+  display: block;
+  align-self: end;
+  padding-bottom: 8px;
+}
+
 body {
   font-family: 'Syne', sans-serif;
   background: var(--bg);

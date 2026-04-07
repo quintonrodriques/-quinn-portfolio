@@ -572,12 +572,13 @@ export default function Home({ uiProjects, uxProjects, about }) {
       }
       startRacingBackground()
 
-      // Update hero description text
-      const desc = document.getElementById('heroDesc')
-      if (desc) {
-        desc.style.transition = 'none'
-        desc.textContent = 'While every design decision I make starts with the user, I believe the most impactful systems are the ones that carry a distinct personality; ones that feel intuitive to navigate and enjoyable to spend time in.'
-      }
+      // Switch to split layout — hide old desc/scroll, show approach text
+      const heroRow = document.getElementById('heroRow')
+      const heroApproach = document.getElementById('heroApproachText')
+      const heroSection = document.getElementById('heroSection')
+      if (heroRow) heroRow.style.display = 'none'
+      if (heroApproach) heroApproach.classList.add('approach-text-visible')
+      if (heroSection) heroSection.classList.add('hero-split')
     }, 1500 + 1750)
   }
 
@@ -893,7 +894,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
             <span className="line-outline"><span className="hw hw-2 outline-word" id="hw-interfaces">interfaces.</span></span>
           </span>
         </h1>
-        <div className="hero-row">
+        <div className="hero-row" id="heroRow">
           <p className="hero-desc" id="heroDesc">
             Quinn is a UI/UX designer crafting digital experiences that feel effortless to use and beautiful to inhabit. Based in {bio.location || 'Montreal'}.
           </p>
@@ -901,6 +902,11 @@ export default function Home({ uiProjects, uxProjects, about }) {
             <div className="hero-scroll-line" />
             <span>Scroll</span>
           </div>
+        </div>
+        <div className="hero-approach-text" id="heroApproachText">
+          <p>Ten years in UX, starting in tech and eventually finding my home in games. What excites me most about design is something a lot of people overlook: the character of an interface. Whether you're building a banking app or a AAA title, there's almost always room to make the experience feel like something. Professional, accessible, and still genuinely enjoyable.</p>
+          <p>Motion that makes interactions feel tactile and alive. Moments of surprise. Humans are messy and funny and the best systems reflect a little of that back.</p>
+          <p>From ideation to execution, I care about the feeling a user walks away with. Not just "this works" — but "I actually liked using that."</p>
         </div>
       </section>
 

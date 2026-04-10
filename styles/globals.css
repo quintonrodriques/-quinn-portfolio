@@ -244,7 +244,10 @@ html { scroll-behavior: smooth; }
 .approach-heading { display: none; }
 
 /* Glassy state after approach sequence */
-body.approach-active .projects-title { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: normal; letter-spacing: -0.02em; }
+body.approach-active .projects-title { font-family: 'DM Sans', sans-serif; font-weight: 700; font-style: normal; letter-spacing: 0.04em; text-transform: uppercase; font-size: 44px; }
+@media (max-width: 900px) {
+  body.approach-active .projects-title { font-size: 28px; }
+}
 body.approach-active .disclaimer-banner {
   background: rgba(255,255,255,0.04);
   border-bottom-color: rgba(255,255,255,0.08);
@@ -990,7 +993,7 @@ footer {
 
   /* Projects header — stacked on mobile */
   .projects-header { flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 40px; }
-  .projects-title { white-space: nowrap; font-size: 36px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .projects-title { white-space: nowrap; font-size: 36px; letter-spacing: -0.01em; }
   .gallery-caption-desktop { display: none; }
   .gallery-caption-text-mobile { display: block !important; }
 }

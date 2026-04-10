@@ -53,9 +53,14 @@ const gradients = [
 function ProjectCard({ project, index, onClick }) {
   const bg = project.thumbnailUrl || null
   const gradient = gradients[index % gradients.length]
+  const [staticRevealed, setStaticRevealed] = useState(false)
 
   const handleClick = () => {
-    if (project.isStatic) return
+    if (project.isStatic) {
+      setStaticRevealed(true)
+      setTimeout(() => setStaticRevealed(false), 2800)
+      return
+    }
     if (project.externalUrl) {
       window.open(project.externalUrl, '_blank', 'noopener noreferrer')
     } else {
@@ -64,7 +69,11 @@ function ProjectCard({ project, index, onClick }) {
   }
 
   return (
-    <div className={`pcard r ${project.tall ? 'tall' : ''}`} onClick={handleClick} style={project.isStatic ? { cursor: 'default' } : {}}>
+    <div
+      className={`pcard r ${project.tall ? 'tall' : ''} ${staticRevealed ? 'pcard-static-revealed' : ''}`}
+      onClick={handleClick}
+      style={project.isStatic ? { cursor: 'pointer' } : {}}
+    >
       <div className="pcard-img">
         <div className="pcard-img-inner">
           {bg
@@ -74,6 +83,14 @@ function ProjectCard({ project, index, onClick }) {
         </div>
         {project.externalUrl && (
           <div className="pcard-external-badge">↗</div>
+        )}
+        {project.isStatic && (
+          <div className={`pcard-static-overlay ${staticRevealed ? 'visible' : ''}`}>
+            <div className="pcard-static-inner">
+              <span className="pcard-static-label">Work Available</span>
+              <span className="pcard-static-sub">upon request</span>
+            </div>
+          </div>
         )}
       </div>
       <div className="pcard-body">

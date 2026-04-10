@@ -339,24 +339,23 @@ export default function Home({ uiProjects, uxProjects, about }) {
     let shakeCount = 0
     const MAX_SHAKES = 5
     const SCROLL_TRIANGLE_DELAY = 30000
-    const SHAKE_HINT_COUNT_LIMIT = 2  // if shaken more than this before 30s, skip scroll triangle
-    let shakeHintCount = 0  // counts shake-it-off triggers (hover events)
+    let shakeHintCount = 0
     let orbitAngle = 0
     let lastX = 0, dirChanges = 0, lastDir = 0, lastDirTime = 0
     const SHAKE_THRESHOLD = 6, SHAKE_WINDOW = 750, SHAKES_NEEDED = 6
 
-    // Show scroll triangle after 30s if user hasn't triggered shake hint too many times
+    // Show scroll triangle after 30s unless shaken 5+ times before then
     if (triangle) triangle.style.opacity = '0'
     setTimeout(() => {
-      if (shakeHintCount <= SHAKE_HINT_COUNT_LIMIT) {
+      if (shakeCount < MAX_SHAKES) {
         triangleHidden = false
         if (triangle) triangle.style.opacity = ''
       }
     }, SCROLL_TRIANGLE_DELAY)
 
-    // Orbiting triangle — orbits around center dot
+    // Orbiting triangle — orbits around center dot, visible even during freakout
     const animateTriangle = () => {
-      if (!triangle || isFreakout || triangleHidden) {
+      if (!triangle || triangleHidden) {
         requestAnimationFrame(animateTriangle)
         return
       }
@@ -585,19 +584,31 @@ export default function Home({ uiProjects, uxProjects, about }) {
     }
 
     let activatedCards = 0
+    let dotsFed = 0
     let blackHoleDisabled = false
 
     function activateNextSkillCard() {
       const cards = Array.from(document.querySelectorAll('.skill-item.si'))
       const totalCards = cards.length
-      const targetIndex = totalCards - 1 - activatedCards
-      if (targetIndex >= 0) {
-        cards[targetIndex].classList.add('skill-powered')
-        activatedCards++
+      dotsFed++
+
+      // Dot 1 → 1 card, Dot 2 → 2 cards, Dot 3 → 3 cards
+      const batchSize = Math.min(dotsFed, 3)
+
+      for (let i = 0; i < batchSize; i++) {
+        const targetIndex = totalCards - 1 - activatedCards
+        if (targetIndex >= 0) {
+          const delay = i * 160
+          setTimeout(() => {
+            cards[targetIndex - i < 0 ? 0 : targetIndex - i]?.classList.add('skill-powered')
+          }, delay)
+          activatedCards++
+        }
       }
+
       if (activatedCards >= totalCards) {
         blackHoleDisabled = true
-        showApproachHeading()
+        setTimeout(() => showApproachHeading(), batchSize * 160 + 100)
       }
     }
 
@@ -632,9 +643,8 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
     function toggleFreakout() {
       if (!isFreakout) {
-        // Circle → Square: spawn dot, hide triangle permanently
+        // Circle → Square: spawn dot
         isFreakout = true
-        triangleHidden = true
         shakeCount++
         // Hide shake hint text once max reached
         if (shakeCount >= MAX_SHAKES) {
@@ -642,7 +652,6 @@ export default function Home({ uiProjects, uxProjects, about }) {
           if (shakeHint) shakeHint.style.display = 'none'
         }
         cursor.classList.add('freakout')
-        cursor.classList.add('triangle-hidden')
         spawnFlyDot()
       } else {
         // Square → Circle: only if dot has landed
@@ -767,7 +776,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
       const desc = document.getElementById('heroDesc')
       if (desc) {
         desc.style.transition = 'none'
-        desc.innerHTML = 'What excites me most about design is something that often gets overlooked: the character of an interface. Whether you\'re building an investment platform or a AAA video game, there\'s almost always room to make the experience feel impactful. You don\'t need to sacrifice professionalism or accessibility to make the experience enjoyable.<br><br>This philosophy guides all of my work. Using motion that makes interactions feel tactile and alive. Moments of surprise. Humans are messy and funny and imperfect, and I think the best systems reflect a little of that back. From ideation to execution, the goal is about the feeling a user walks away with. Not just "this works", but "I actually liked using that."'
+        desc.innerHTML = 'What excites me most about design is something that often gets overlooked: the character of an interface. Whether you\'re building a banking app or a AAA title, there\'s almost always room to make the experience feel impactful. You don\'t need to sacrifice professionalism or accessibility to make the experience enjoyable.<br><br>This philosophy guides all of my work. Using motion that makes interactions feel tactile and alive. Moments of surprise. Humans are messy and funny and imperfect, and I think the best systems reflect a little of that back. From ideation to execution, the goal is about the feeling a user walks away with. Not just "this works", but "I actually liked using that."'
       }
 
       // Hide scroll widget on mobile so text centers

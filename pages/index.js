@@ -1200,8 +1200,18 @@ export default function Home({ uiProjects, uxProjects, about }) {
   useEffect(() => {
     const els = document.querySelectorAll('.r')
     const obs = new IntersectionObserver(entries => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) setTimeout(() => e.target.classList.add('v'), i * 70)
+      entries.forEach(e => {
+        if (!e.isIntersecting) return
+        const el = e.target
+        // If it's a pcard, stagger by its index within the grid
+        if (el.classList.contains('pcard')) {
+          const siblings = Array.from(el.closest('.cards-set')?.querySelectorAll('.pcard') || [])
+          const idx = siblings.indexOf(el)
+          setTimeout(() => el.classList.add('v'), idx * 80)
+        } else {
+          setTimeout(() => el.classList.add('v'), 0)
+        }
+        obs.unobserve(el)
       })
     }, { threshold: 0.08 })
     els.forEach(r => obs.observe(r))

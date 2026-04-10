@@ -500,14 +500,24 @@ export default function Home({ uiProjects, uxProjects, about }) {
     }
 
     // Footer logo hover — glow and remove triangle
+    let footerGlowCount = 0
     const footerLogoEl = document.getElementById('footerLogo')
     if (footerLogoEl) {
       footerLogoEl.addEventListener('mouseenter', () => {
+        footerGlowCount++
         footerLogoEl.classList.add('footer-logo-glow')
         if (footerTriangle) removeFooterTriangle()
+
+        // On 3rd+ hover, also glow "form" in the about heading
+        if (footerGlowCount >= 3) {
+          const formWord = document.getElementById('aboutFormWord')
+          if (formWord) formWord.classList.add('about-form-glow')
+        }
       })
       footerLogoEl.addEventListener('mouseleave', () => {
         footerLogoEl.classList.remove('footer-logo-glow')
+        const formWord = document.getElementById('aboutFormWord')
+        if (formWord) formWord.classList.remove('about-form-glow')
       })
     }
 
@@ -598,27 +608,48 @@ export default function Home({ uiProjects, uxProjects, about }) {
     }
 
     function suckIntoPeriod(fromX, fromY, toX, toY) {
-      let t = 0
-      const duration = 18 // frames
-      const startX = fromX, startY = fromY
-      const suckRaf = () => {
-        t++
-        const p = t / duration
-        const ease = p * p
-        const cx = startX + (toX - startX) * ease
-        const cy = startY + (toY - startY) * ease
+      // Phase 1: orbit the period with decaying radius (bouncy)
+      let orbitT = 0
+      const orbitDur = 52 // frames ~870ms
+      const startRadius = Math.hypot(fromX - toX, fromY - toY)
+      const startAngle = Math.atan2(fromY - toY, fromX - toX)
+
+      const orbitRaf = () => {
+        orbitT++
+        const p = orbitT / orbitDur
+        // Decaying radius — bounces as it tightens
+        const bounce = 1 + Math.sin(p * Math.PI * 3.5) * 0.18 * (1 - p)
+        const radius = startRadius * (1 - p) * bounce
+        const angle = startAngle + p * Math.PI * 2.5
+        const cx = toX + Math.cos(angle) * radius
+        const cy = toY + Math.sin(angle) * radius
         flyDot.style.left = cx + 'px'
         flyDot.style.top = cy + 'px'
-        flyDot.style.transform = `translate(-50%, -50%)`
-        if (t < duration) {
-          requestAnimationFrame(suckRaf)
+        flyDot.style.transform = 'translate(-50%,-50%)'
+
+        if (orbitT < orbitDur) {
+          requestAnimationFrame(orbitRaf)
         } else {
-          flyDot.style.opacity = '0'
-          triggerPeriodPulse()
-          activateNextSkillCard()
+          // Phase 2: final snap inward
+          let t = 0
+          const dur = 10
+          const suckRaf = () => {
+            t++
+            const ease = (t / dur) * (t / dur)
+            flyDot.style.left = (cx + (toX - cx) * ease) + 'px'
+            flyDot.style.top = (cy + (toY - cy) * ease) + 'px'
+            if (t < dur) {
+              requestAnimationFrame(suckRaf)
+            } else {
+              flyDot.style.opacity = '0'
+              triggerPeriodPulse()
+              activateNextSkillCard()
+            }
+          }
+          requestAnimationFrame(suckRaf)
         }
       }
-      requestAnimationFrame(suckRaf)
+      requestAnimationFrame(orbitRaf)
     }
 
     function triggerPeriodPulse() {
@@ -1314,7 +1345,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
             </div>
             <h2 className="about-heading" id="aboutHeading">
               Shaping<br />
-              <em>ideas</em> into form<span id="aboutPeriod" className="about-period">.</span>
+              <em>ideas</em> into <span id="aboutFormWord">form</span><span id="aboutPeriod" className="about-period">.</span>
             </h2>
             <p className="about-text-body">{bio.bio}</p>
             {bio.bio2 && <p className="about-text-body">{bio.bio2}</p>}

@@ -450,7 +450,7 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
   position: absolute;
   inset: -4px;
   border-radius: 44px;
-  border: 2px solid var(--accent);
+  border: 0.75px solid var(--accent);
   opacity: 0;
   pointer-events: none;
   z-index: 10;
@@ -460,8 +460,20 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
   animation: pingRing 0.9s ease-out 3;
 }
 @keyframes pingRing {
-  0%   { opacity: 0.9; transform: scale(1); }
+  0%   { opacity: 0.7; transform: scale(1); }
   100% { opacity: 0;   transform: scale(1.5); }
+}
+
+/* About "form" word glow — mirrors feed the form */
+#aboutFormWord {
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+#aboutFormWord.about-form-glow {
+  color: #ffffff;
+  text-shadow:
+    0 0 12px rgba(255,255,255,0.9),
+    0 0 30px rgba(255,255,255,0.5),
+    0 0 60px rgba(255,255,255,0.2);
 }
 .t-opt {
   font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;

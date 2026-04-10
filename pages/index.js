@@ -800,7 +800,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
             alpha: .55 + Math.random() * .2,
             hue: hue + (Math.random() - .5) * 28,
             g: .01 + Math.random() * .008,
-            decay: .988 + Math.random() * .006
+            decay: .965 + Math.random() * .01
           })
         }
       }

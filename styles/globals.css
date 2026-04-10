@@ -911,6 +911,15 @@ footer {
   footer { padding: 30px 24px; flex-direction: column; gap: 20px; }
   body.approach-active .hero-desc { max-width: 100%; text-align: center; }
   body.approach-active .hero-title { padding-top: 40px; font-size: clamp(52px, 14vw, 90px); padding-bottom: 48px; }
+  body.approach-active .hero-row {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 0 -8px;
+  }
 
   /* White flash overlay */
   .approach-flash {

@@ -585,13 +585,14 @@ export default function Home({ uiProjects, uxProjects, about }) {
         if (period && !blackHoleDisabled) {
           const pr = period.getBoundingClientRect()
           const periodCX = pr.left + pr.width / 2
-          const periodCY = pr.top + pr.height / 2
+          const periodCY = pr.top + pr.height * 0.75  // target lower in the glyph
           const dist = Math.hypot(px - periodCX, py - periodCY)
           if (dist < 322 && py > periodCY - 430) {
             sucked = true
             dotInFlight = false
             cancelAnimationFrame(flyRaf)
-            suckIntoPeriod(px, py, periodCX, periodCY)
+            const pr2 = period.getBoundingClientRect()
+            suckIntoPeriod(px, py, pr2.left + pr2.width / 2, pr2.top + pr2.height * 0.75)
             return
           }
         }

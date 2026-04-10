@@ -460,8 +460,9 @@ body.ux-mode .ll-x { opacity: 1; transform: translateY(0) rotate(0deg); }
   animation: pingRing 0.9s ease-out 3;
 }
 @keyframes pingRing {
-  0%   { opacity: 0.7; transform: scale(1); }
-  100% { opacity: 0;   transform: scale(1.5); }
+  0%   { opacity: 0.8; transform: scale(1);   box-shadow: 0 0 0px 0px var(--accent); }
+  40%  { opacity: 0.5; transform: scale(1.25); box-shadow: 0 0 8px 3px var(--accent); }
+  100% { opacity: 0;   transform: scale(1.5);  box-shadow: 0 0 0px 0px var(--accent); }
 }
 
 /* About "form" word glow — mirrors feed the form */

@@ -806,12 +806,12 @@ export default function Home({ uiProjects, uxProjects, about }) {
       }
 
       const launches = [
-        { delay: 0,   x: W*.22, ty: H*.22, hue: HUES[0] },
-        { delay: 180, x: W*.65, ty: H*.18, hue: HUES[1] },
-        { delay: 340, x: W*.42, ty: H*.14, hue: HUES[2] },
-        { delay: 520, x: W*.75, ty: H*.25, hue: HUES[3] },
-        { delay: 700, x: W*.35, ty: H*.18, hue: HUES[4] },
-        { delay: 880, x: W*.55, ty: H*.16, hue: HUES[5] },
+        { delay: 0,   x: W*.22, ty: H*.10, hue: HUES[0] },
+        { delay: 220, x: W*.65, ty: H*.28, hue: HUES[1] },
+        { delay: 380, x: W*.42, ty: H*.08, hue: HUES[2] },
+        { delay: 480, x: W*.78, ty: H*.18, hue: HUES[3] },
+        { delay: 680, x: W*.32, ty: H*.32, hue: HUES[4] },
+        { delay: 900, x: W*.58, ty: H*.12, hue: HUES[5] },
       ]
       launches.forEach(l => spawnRocket(l.x, l.ty, l.hue, l.delay))
       setTimeout(() => { allLaunched = true }, launches[launches.length - 1].delay + 1500)
@@ -1225,10 +1225,13 @@ export default function Home({ uiProjects, uxProjects, about }) {
       entries.forEach(e => {
         if (!e.isIntersecting) return
         const el = e.target
-        // If it's a pcard, stagger by its index within the grid
         if (el.classList.contains('pcard')) {
           const siblings = Array.from(el.closest('.cards-set')?.querySelectorAll('.pcard') || [])
           const idx = siblings.indexOf(el)
+          // On mobile, assign alternating direction before reveal
+          if (window.innerWidth <= 900 && idx % 2 !== 0) {
+            el.classList.add('from-right')
+          }
           setTimeout(() => el.classList.add('v'), idx * 80)
         } else {
           setTimeout(() => el.classList.add('v'), 0)

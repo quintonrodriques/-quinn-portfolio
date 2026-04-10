@@ -75,7 +75,6 @@ html { scroll-behavior: smooth; }
   pointer-events: none;
   transition: opacity 0.3s ease;
 }
-.custom-cursor.freakout .cursor-triangle:not(.cursor-triangle-footer),
 .custom-cursor.triangle-hidden .cursor-triangle:not(.cursor-triangle-footer) { opacity: 0; }
 
 /* Footer triangle — slightly different style */

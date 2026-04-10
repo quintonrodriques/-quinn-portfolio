@@ -586,29 +586,25 @@ export default function Home({ uiProjects, uxProjects, about }) {
     let activatedCards = 0
     let dotsFed = 0
     let blackHoleDisabled = false
+    // Predefined activation batches: dot1=[5], dot2=[4,3], dot3=[2,1,0]
+    const activationBatches = [[5], [4, 3], [2, 1, 0]]
 
     function activateNextSkillCard() {
+      if (dotsFed >= activationBatches.length) return
       const cards = Array.from(document.querySelectorAll('.skill-item.si'))
-      const totalCards = cards.length
+      const batch = activationBatches[dotsFed]
       dotsFed++
 
-      // Dot 1 → 1 card, Dot 2 → 2 cards, Dot 3 → 3 cards
-      const batchSize = Math.min(dotsFed, 3)
+      batch.forEach((cardIndex, i) => {
+        setTimeout(() => {
+          if (cards[cardIndex]) cards[cardIndex].classList.add('skill-powered')
+        }, i * 160)
+      })
 
-      for (let i = 0; i < batchSize; i++) {
-        const targetIndex = totalCards - 1 - activatedCards
-        if (targetIndex >= 0) {
-          const delay = i * 160
-          setTimeout(() => {
-            cards[targetIndex - i < 0 ? 0 : targetIndex - i]?.classList.add('skill-powered')
-          }, delay)
-          activatedCards++
-        }
-      }
-
-      if (activatedCards >= totalCards) {
+      const allActivated = dotsFed >= activationBatches.length
+      if (allActivated) {
         blackHoleDisabled = true
-        setTimeout(() => showApproachHeading(), batchSize * 160 + 100)
+        setTimeout(() => showApproachHeading(), batch.length * 160 + 100)
       }
     }
 

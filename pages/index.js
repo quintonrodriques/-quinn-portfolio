@@ -689,7 +689,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
         // Circle → Square: spawn dot
         isFreakout = true
         shakeCount++
-        // If shake hint was ever shown and user now shakes — remove scroll triangle permanently
+        // If shake hint was ever shown and user now shakes — remove scroll triangle and fire fireworks
         if (shakeHintCount > 0 && !triangleHidden) {
           triangleHidden = true
           if (triangle) {
@@ -697,6 +697,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
             triangle.style.opacity = '0'
             setTimeout(() => { if (triangle) triangle.style.display = 'none' }, 400)
           }
+          launchFireworks()
         }
         // Hide shake hint text once max reached
         if (shakeCount >= MAX_SHAKES) {
@@ -713,6 +714,107 @@ export default function Home({ uiProjects, uxProjects, about }) {
         cursor.classList.add('recovering')
         setTimeout(() => cursor.classList.remove('recovering'), 400)
       }
+    }
+
+    function launchFireworks() {
+      const existing = document.getElementById('fireworkCanvas')
+      if (existing) existing.remove()
+
+      const canvas = document.createElement('canvas')
+      canvas.id = 'fireworkCanvas'
+      canvas.style.cssText = 'position:fixed;inset:0;z-index:9998;pointer-events:none;'
+      document.body.appendChild(canvas)
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+      const ctx = canvas.getContext('2d')
+      const W = canvas.width, H = canvas.height
+
+      const HUES = [200, 270, 155, 315, 40, 180]
+      let rockets = [], particles = []
+
+      const spawnRocket = (x, targetY, hue, delay) => {
+        setTimeout(() => {
+          rockets.push({ x, y: H + 8, targetY, speed: 4 + Math.random() * 2.5, hue, trail: [], exploded: false })
+        }, delay)
+      }
+
+      const explode = (x, y, hue) => {
+        for (let i = 0; i < 24; i++) {
+          const angle = (i / 24) * Math.PI * 2 + (Math.random() - .5) * .35
+          const sp = .6 + Math.random() * 1.6
+          particles.push({
+            x, y,
+            vx: Math.cos(angle) * sp,
+            vy: Math.sin(angle) * sp - .5,
+            r: 2.5 + Math.random() * 3,
+            alpha: .6 + Math.random() * .2,
+            hue: hue + (Math.random() - .5) * 28,
+            g: .012 + Math.random() * .008,
+            decay: .968 + Math.random() * .008
+          })
+        }
+      }
+
+      const launches = [
+        { delay: 0,    x: W*.22, ty: H*.22, hue: HUES[0] },
+        { delay: 380,  x: W*.65, ty: H*.18, hue: HUES[1] },
+        { delay: 700,  x: W*.42, ty: H*.14, hue: HUES[2] },
+        { delay: 1050, x: W*.75, ty: H*.25, hue: HUES[3] },
+        { delay: 1350, x: W*.30, ty: H*.20, hue: HUES[4] },
+        { delay: 1700, x: W*.55, ty: H*.16, hue: HUES[5] },
+        { delay: 2100, x: W*.20, ty: H*.28, hue: HUES[0] },
+        { delay: 2450, x: W*.70, ty: H*.15, hue: HUES[2] },
+        { delay: 2800, x: W*.48, ty: H*.20, hue: HUES[1] },
+        { delay: 3200, x: W*.35, ty: H*.18, hue: HUES[4] },
+      ]
+      launches.forEach(l => spawnRocket(l.x, l.ty, l.hue, l.delay))
+
+      // Subtle bg tint
+      const prevBg = document.body.style.background
+      document.body.style.transition = 'background 1.5s ease'
+      document.body.style.background = '#0d0a1e'
+      setTimeout(() => {
+        document.body.style.background = prevBg || '#000a04'
+      }, 3000)
+
+      let rafFw
+      const loop = () => {
+        ctx.clearRect(0, 0, W, H)
+        rockets.forEach(r => {
+          if (r.exploded) return
+          r.trail.push({ x: r.x, y: r.y })
+          if (r.trail.length > 10) r.trail.shift()
+          r.y -= r.speed
+          r.trail.forEach((pt, i) => {
+            const a = (i / r.trail.length) * .5
+            ctx.save(); ctx.filter = 'blur(3px)'
+            ctx.beginPath(); ctx.arc(pt.x, pt.y, 3 - i * .2, 0, Math.PI * 2)
+            ctx.fillStyle = `hsla(${r.hue},70%,70%,${a})`
+            ctx.fill(); ctx.restore()
+          })
+          ctx.save(); ctx.filter = 'blur(2px)'
+          ctx.beginPath(); ctx.arc(r.x, r.y, 4, 0, Math.PI * 2)
+          ctx.fillStyle = `hsla(${r.hue},80%,80%,.9)`
+          ctx.fill(); ctx.restore()
+          if (r.y <= r.targetY) { r.exploded = true; explode(r.x, r.y, r.hue) }
+        })
+        particles = particles.filter(p => p.alpha > .012)
+        particles.forEach(p => {
+          p.x += p.vx; p.y += p.vy; p.vy += p.g; p.alpha *= p.decay
+          ctx.save(); ctx.filter = 'blur(2.5px)'
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+          ctx.fillStyle = `hsla(${p.hue},68%,68%,${p.alpha})`
+          ctx.fill(); ctx.restore()
+        })
+        rafFw = requestAnimationFrame(loop)
+      }
+      rafFw = requestAnimationFrame(loop)
+
+      // Clean up after 5s
+      setTimeout(() => {
+        cancelAnimationFrame(rafFw)
+        canvas.remove()
+      }, 5000)
     }
 
     let rafId

@@ -762,10 +762,11 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
       const HUES = [200, 270, 155, 315, 40, 180]
       let rockets = [], particles = []
+      let allLaunched = false
 
       const spawnRocket = (x, targetY, hue, delay) => {
         setTimeout(() => {
-          rockets.push({ x, y: H + 8, targetY, speed: 4 + Math.random() * 2.5, hue, trail: [], exploded: false })
+          rockets.push({ x, y: H + 8, targetY, speed: 16 + Math.random() * 10, hue, trail: [], exploded: false })
         }, delay)
       }
 
@@ -787,18 +788,19 @@ export default function Home({ uiProjects, uxProjects, about }) {
       }
 
       const launches = [
-        { delay: 0,    x: W*.22, ty: H*.22, hue: HUES[0] },
-        { delay: 380,  x: W*.65, ty: H*.18, hue: HUES[1] },
-        { delay: 700,  x: W*.42, ty: H*.14, hue: HUES[2] },
-        { delay: 1050, x: W*.75, ty: H*.25, hue: HUES[3] },
-        { delay: 1350, x: W*.30, ty: H*.20, hue: HUES[4] },
-        { delay: 1700, x: W*.55, ty: H*.16, hue: HUES[5] },
-        { delay: 2100, x: W*.20, ty: H*.28, hue: HUES[0] },
-        { delay: 2450, x: W*.70, ty: H*.15, hue: HUES[2] },
-        { delay: 2800, x: W*.48, ty: H*.20, hue: HUES[1] },
-        { delay: 3200, x: W*.35, ty: H*.18, hue: HUES[4] },
+        { delay: 0,   x: W*.22, ty: H*.22, hue: HUES[0] },
+        { delay: 120, x: W*.65, ty: H*.18, hue: HUES[1] },
+        { delay: 220, x: W*.42, ty: H*.14, hue: HUES[2] },
+        { delay: 340, x: W*.75, ty: H*.25, hue: HUES[3] },
+        { delay: 440, x: W*.30, ty: H*.20, hue: HUES[4] },
+        { delay: 560, x: W*.55, ty: H*.16, hue: HUES[5] },
+        { delay: 700, x: W*.20, ty: H*.28, hue: HUES[0] },
+        { delay: 820, x: W*.70, ty: H*.15, hue: HUES[2] },
+        { delay: 940, x: W*.48, ty: H*.20, hue: HUES[1] },
+        { delay: 1060,x: W*.35, ty: H*.18, hue: HUES[4] },
       ]
       launches.forEach(l => spawnRocket(l.x, l.ty, l.hue, l.delay))
+      setTimeout(() => { allLaunched = true }, launches[launches.length-1].delay + 200)
 
       // Subtle bg tint
       const prevBg = document.body.style.background
@@ -806,7 +808,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
       document.body.style.background = '#0d0a1e'
       setTimeout(() => {
         document.body.style.background = prevBg || '#000a04'
-      }, 3000)
+      }, 1800)
 
       let rafFw
       const loop = () => {
@@ -837,15 +839,17 @@ export default function Home({ uiProjects, uxProjects, about }) {
           ctx.fillStyle = `hsla(${p.hue},68%,68%,${p.alpha})`
           ctx.fill(); ctx.restore()
         })
+
+        // Auto-cleanup once all launched and last particle fades
+        if (allLaunched && particles.length === 0 && rockets.every(r => r.exploded)) {
+          cancelAnimationFrame(rafFw)
+          canvas.remove()
+          return
+        }
+
         rafFw = requestAnimationFrame(loop)
       }
       rafFw = requestAnimationFrame(loop)
-
-      // Clean up after 5s
-      setTimeout(() => {
-        cancelAnimationFrame(rafFw)
-        canvas.remove()
-      }, 5000)
     }
 
     let rafId

@@ -690,6 +690,15 @@ export default function Home({ uiProjects, uxProjects, about }) {
         // Circle → Square: spawn dot
         isFreakout = true
         shakeCount++
+        // If shake hint was ever shown and user now shakes — remove scroll triangle permanently
+        if (shakeHintCount > 0 && !triangleHidden) {
+          triangleHidden = true
+          if (triangle) {
+            triangle.style.transition = 'opacity 0.4s ease'
+            triangle.style.opacity = '0'
+            setTimeout(() => { if (triangle) triangle.style.display = 'none' }, 400)
+          }
+        }
         // Hide shake hint text once max reached
         if (shakeCount >= MAX_SHAKES) {
           const shakeHint = document.getElementById('shakeHint')

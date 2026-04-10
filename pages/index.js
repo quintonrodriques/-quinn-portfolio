@@ -783,7 +783,8 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
       const spawnRocket = (x, targetY, hue, delay) => {
         setTimeout(() => {
-          rockets.push({ x, y: H + 8, targetY, speed: 48 + Math.random() * 16, hue, trail: [], exploded: false })
+          const dist = H + 8 - targetY
+          rockets.push({ x, y: H + 8, targetY, dist, speed: 60 + Math.random() * 16, hue, trail: [], exploded: false })
         }, delay)
       }
 
@@ -843,7 +844,11 @@ export default function Home({ uiProjects, uxProjects, about }) {
           if (r.exploded) return
           r.trail.push({ x: r.x, y: r.y })
           if (r.trail.length > 8) r.trail.shift()
-          r.y -= r.speed
+          // Progress 0→1 as rocket approaches target, ease-out deceleration
+          const progress = Math.min(1, (H + 8 - r.y) / r.dist)
+          const eased = 1 - Math.pow(1 - progress, 2)
+          r.speed = r.dist * 0.06 * (1 - eased * 0.82)
+          r.y -= Math.max(r.speed, 1.5)
           ctx.save()
           ctx.filter = 'blur(2px)'
           r.trail.forEach((pt, i) => {
@@ -984,7 +989,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
       const desc = document.getElementById('heroDesc')
       if (desc) {
         desc.style.transition = 'none'
-        desc.innerHTML = 'What excites me most about design is something that often gets overlooked: the character of an interface. Whether you\'re building a banking app or a AAA title, there\'s almost always room to make the experience feel impactful. You don\'t need to sacrifice professionalism or accessibility to make the experience enjoyable.<br><br>This philosophy guides all of my work. Using motion that makes interactions feel tactile and alive. Moments of surprise. Humans are messy and funny and imperfect, and I think the best systems reflect a little of that back. From ideation to execution, the goal is about the feeling a user walks away with. Not just "this works", but "I actually liked using that."'
+        desc.innerHTML = 'Whether you\'re building a banking app or a AAA video game, there\'s almost always room to make the experience feel impactful. You don\'t need to sacrifice professionalism or accessibility to make the experience enjoyable.<br><br>Humans are messy and funny and imperfect. I think the best systems reflect a little of that back. From ideation to execution, the goal is about the feeling a user walks away with. Not just "this works", but "I actually liked using that."'
       }
 
       // Hide scroll widget on mobile so text centers

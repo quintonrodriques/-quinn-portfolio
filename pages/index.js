@@ -355,6 +355,30 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
     // Orbiting triangle — orbits around center dot, visible even during freakout
     const animateTriangle = () => {
+    // Scroll triangle bounce state
+    let scrollTriBounceOffset = 0
+    let scrollTriBouncing = false
+    const triggerScrollTriBounce = () => {
+      if (triangleHidden || scrollTriBouncing) return
+      scrollTriBouncing = true
+      const start = performance.now()
+      const dur = 600
+      const maxBounce = 8
+      const bounceFn = (now) => {
+        const t = Math.min((now - start) / dur, 1)
+        // ease out sine — pushes out then snaps back
+        scrollTriBounceOffset = maxBounce * Math.sin(t * Math.PI)
+        if (t < 1) requestAnimationFrame(bounceFn)
+        else { scrollTriBounceOffset = 0; scrollTriBouncing = false }
+      }
+      requestAnimationFrame(bounceFn)
+    }
+    // Bounce every 30s after triangle appears
+    setTimeout(() => {
+      if (!triangleHidden) triggerScrollTriBounce()
+      setInterval(() => { if (!triangleHidden) triggerScrollTriBounce() }, 30000)
+    }, 30000)
+
       if (!triangle || triangleHidden) {
         requestAnimationFrame(animateTriangle)
         return
@@ -365,13 +389,16 @@ export default function Home({ uiProjects, uxProjects, about }) {
         const targetX = sr.left + sr.width / 2
         const targetY = sr.top + sr.height / 2
         const angle = Math.atan2(targetY - mouseY, targetX - mouseX)
-        const r = 16
+        const dist = Math.hypot(targetX - mouseX, targetY - mouseY)
+        // Scale grows as distance increases, clamped 1.0–1.8
+        const distScale = Math.min(1.8, 1 + dist / 600)
+        const r = 16 + scrollTriBounceOffset
         const tx = Math.cos(angle) * r
         const ty = Math.sin(angle) * r
         const deg = angle * (180 / Math.PI) + 90
         triangle.style.left = `calc(50% + ${tx}px)`
         triangle.style.top = `calc(50% + ${ty}px)`
-        triangle.style.transform = `translate(-50%, -50%) rotate(${deg}deg)`
+        triangle.style.transform = `translate(-50%, -50%) rotate(${deg}deg) scale(${distScale})`
       }
       requestAnimationFrame(animateTriangle)
     }
@@ -403,6 +430,23 @@ export default function Home({ uiProjects, uxProjects, about }) {
     }
 
     // Animate footer triangle — runs in parallel with main triangle loop
+    let footerTriBounceOffset = 0
+    let footerTriBouncing = false
+    const triggerFooterTriBounce = () => {
+      if (!footerTriangle || footerTriBouncing) return
+      footerTriBouncing = true
+      const start = performance.now()
+      const dur = 600
+      const maxBounce = 8
+      const bounceFn = (now) => {
+        const t = Math.min((now - start) / dur, 1)
+        footerTriBounceOffset = maxBounce * Math.sin(t * Math.PI)
+        if (t < 1) requestAnimationFrame(bounceFn)
+        else { footerTriBounceOffset = 0; footerTriBouncing = false }
+      }
+      requestAnimationFrame(bounceFn)
+    }
+
     const animateFooterTriangle = () => {
       if (!footerTriangle) {
         return
@@ -413,13 +457,15 @@ export default function Home({ uiProjects, uxProjects, about }) {
         const targetX = fr.left + fr.width / 2
         const targetY = fr.top + fr.height / 2
         const angle = Math.atan2(targetY - mouseY, targetX - mouseX)
-        const r = 16
+        const dist = Math.hypot(targetX - mouseX, targetY - mouseY)
+        const distScale = Math.min(1.8, 1 + dist / 600)
+        const r = 16 + footerTriBounceOffset
         const tx = Math.cos(angle) * r
         const ty = Math.sin(angle) * r
         const deg = angle * (180 / Math.PI) + 90
         footerTriangle.style.left = `calc(50% + ${tx}px)`
         footerTriangle.style.top = `calc(50% + ${ty}px)`
-        footerTriangle.style.transform = `translate(-50%, -50%) rotate(${deg}deg)`
+        footerTriangle.style.transform = `translate(-50%, -50%) rotate(${deg}deg) scale(${distScale})`
       }
       requestAnimationFrame(animateFooterTriangle)
     }
@@ -439,6 +485,8 @@ export default function Home({ uiProjects, uxProjects, about }) {
         footerTriangleTimer = setTimeout(() => {
           spawnFooterTriangle()
           animateFooterTriangle()
+          // Bounce every 30s
+          setInterval(() => triggerFooterTriBounce(), 30000)
         }, 30000)
       }
     }

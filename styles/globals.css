@@ -967,7 +967,7 @@ footer {
 
   /* Projects header — stacked on mobile */
   .projects-header { flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 40px; }
-  .projects-title { white-space: nowrap; font-size: 42px; }
+  .projects-title { white-space: nowrap; font-size: 36px; text-transform: uppercase; letter-spacing: 0.04em; }
   .gallery-caption-desktop { display: none; }
   .gallery-caption-text-mobile { display: block !important; }
 }

@@ -767,7 +767,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
       const desc = document.getElementById('heroDesc')
       if (desc) {
         desc.style.transition = 'none'
-        desc.innerHTML = 'What excites me most about design is something that often gets overlooked: the character of an interface. Whether you\'re building a banking app or a AAA title, there\'s almost always room to make the experience feel impactful. You don\'t need to sacrifice professionalism or accessibility to make the experience enjoyable.<br><br>This philosophy guides all of my work. Using motion that makes interactions feel tactile and alive. Moments of surprise. Humans are messy and funny and imperfect, and I think the best systems reflect a little of that back. From ideation to execution, the goal is about the feeling a user walks away with. Not just "this works", but "I actually liked using that."'
+        desc.innerHTML = 'What excites me most about design is something that often gets overlooked: the character of an interface. Whether you\'re building an investment platform or a AAA video game, there\'s almost always room to make the experience feel impactful. You don\'t need to sacrifice professionalism or accessibility to make the experience enjoyable.<br><br>This philosophy guides all of my work. Using motion that makes interactions feel tactile and alive. Moments of surprise. Humans are messy and funny and imperfect, and I think the best systems reflect a little of that back. From ideation to execution, the goal is about the feeling a user walks away with. Not just "this works", but "I actually liked using that."'
       }
 
       // Hide scroll widget on mobile so text centers

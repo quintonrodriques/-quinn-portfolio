@@ -341,7 +341,9 @@ export default function Home({ uiProjects, uxProjects, about }) {
     const SCROLL_TRIANGLE_DELAY = 30000
     let shakeHintCount = 0
     let orbitAngle = 0
-    let lastX = 0, dirChanges = 0, lastDir = 0, lastDirTime = 0
+    let lastX = 0, lastY = 0
+    let dirChangesX = 0, lastDirX = 0, lastDirTimeX = 0
+    let dirChangesY = 0, lastDirY = 0, lastDirTimeY = 0
     const SHAKE_THRESHOLD = 6, SHAKE_WINDOW = 750, SHAKES_NEEDED = 6
 
     // Show scroll triangle after 30s unless shaken 5+ times before then
@@ -534,21 +536,35 @@ export default function Home({ uiProjects, uxProjects, about }) {
       cursor.style.top = mouseY + 'px'
 
       const dx = e.clientX - lastX
+      const dy = e.clientY - lastY
+      const now = Date.now()
+
+      // Horizontal shake
       if (Math.abs(dx) > SHAKE_THRESHOLD) {
         const dir = dx > 0 ? 1 : -1
-        const now = Date.now()
-        if (dir !== lastDir) {
-          if (now - lastDirTime > SHAKE_WINDOW) dirChanges = 0
-          dirChanges++
-          lastDirTime = now
-          lastDir = dir
-          if (dirChanges >= SHAKES_NEEDED) {
-            dirChanges = 0
-            toggleFreakout()
-          }
+        if (dir !== lastDirX) {
+          if (now - lastDirTimeX > SHAKE_WINDOW) dirChangesX = 0
+          dirChangesX++
+          lastDirTimeX = now
+          lastDirX = dir
+          if (dirChangesX >= SHAKES_NEEDED) { dirChangesX = 0; toggleFreakout() }
         }
       }
+
+      // Vertical shake
+      if (Math.abs(dy) > SHAKE_THRESHOLD) {
+        const dir = dy > 0 ? 1 : -1
+        if (dir !== lastDirY) {
+          if (now - lastDirTimeY > SHAKE_WINDOW) dirChangesY = 0
+          dirChangesY++
+          lastDirTimeY = now
+          lastDirY = dir
+          if (dirChangesY >= SHAKES_NEEDED) { dirChangesY = 0; toggleFreakout() }
+        }
+      }
+
       lastX = e.clientX
+      lastY = e.clientY
     }
 
     function spawnFlyDot() {
@@ -772,77 +788,78 @@ export default function Home({ uiProjects, uxProjects, about }) {
       }
 
       const explode = (x, y, hue) => {
-        for (let i = 0; i < 24; i++) {
-          const angle = (i / 24) * Math.PI * 2 + (Math.random() - .5) * .35
-          const sp = .6 + Math.random() * 1.6
+        for (let i = 0; i < 12; i++) {
+          const angle = (i / 12) * Math.PI * 2 + (Math.random() - .5) * .4
+          const sp = .5 + Math.random() * 1.4
           particles.push({
             x, y,
             vx: Math.cos(angle) * sp,
-            vy: Math.sin(angle) * sp - .5,
-            r: 2.5 + Math.random() * 3,
-            alpha: .6 + Math.random() * .2,
+            vy: Math.sin(angle) * sp - .4,
+            r: 3 + Math.random() * 3,
+            alpha: .55 + Math.random() * .2,
             hue: hue + (Math.random() - .5) * 28,
-            g: .012 + Math.random() * .008,
-            decay: .988 + Math.random() * .006  // slower fade — particles linger longer
+            g: .01 + Math.random() * .008,
+            decay: .988 + Math.random() * .006
           })
         }
       }
 
       const launches = [
         { delay: 0,   x: W*.22, ty: H*.22, hue: HUES[0] },
-        { delay: 120, x: W*.65, ty: H*.18, hue: HUES[1] },
-        { delay: 220, x: W*.42, ty: H*.14, hue: HUES[2] },
-        { delay: 340, x: W*.75, ty: H*.25, hue: HUES[3] },
-        { delay: 440, x: W*.30, ty: H*.20, hue: HUES[4] },
-        { delay: 560, x: W*.55, ty: H*.16, hue: HUES[5] },
-        { delay: 700, x: W*.20, ty: H*.28, hue: HUES[0] },
-        { delay: 820, x: W*.70, ty: H*.15, hue: HUES[2] },
-        { delay: 940, x: W*.48, ty: H*.20, hue: HUES[1] },
-        { delay: 1060,x: W*.35, ty: H*.18, hue: HUES[4] },
+        { delay: 180, x: W*.65, ty: H*.18, hue: HUES[1] },
+        { delay: 340, x: W*.42, ty: H*.14, hue: HUES[2] },
+        { delay: 520, x: W*.75, ty: H*.25, hue: HUES[3] },
+        { delay: 700, x: W*.35, ty: H*.18, hue: HUES[4] },
+        { delay: 880, x: W*.55, ty: H*.16, hue: HUES[5] },
       ]
       launches.forEach(l => spawnRocket(l.x, l.ty, l.hue, l.delay))
-      // allLaunched fires after last rocket + a generous buffer for its particles to spawn
-      setTimeout(() => { allLaunched = true }, launches[launches.length-1].delay + 1500)
+      setTimeout(() => { allLaunched = true }, launches[launches.length - 1].delay + 1500)
 
       // Subtle bg tint
       const prevBg = document.body.style.background
       document.body.style.transition = 'background 1.5s ease'
       document.body.style.background = '#0d0a1e'
-      setTimeout(() => {
-        document.body.style.background = prevBg || '#000a04'
-      }, 1800)
+      setTimeout(() => { document.body.style.background = prevBg || '#000a04' }, 1800)
 
       let rafFw
       const loop = () => {
         ctx.clearRect(0, 0, W, H)
+
+        // Draw all particles in one blurred pass
+        ctx.save()
+        ctx.filter = 'blur(2.5px)'
+        particles = particles.filter(p => p.alpha > .015)
+        particles.forEach(p => {
+          p.x += p.vx; p.y += p.vy; p.vy += p.g; p.alpha *= p.decay
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+          ctx.fillStyle = `hsla(${p.hue},68%,68%,${p.alpha})`
+          ctx.fill()
+        })
+        ctx.restore()
+
+        // Draw rockets
         rockets.forEach(r => {
           if (r.exploded) return
           r.trail.push({ x: r.x, y: r.y })
-          if (r.trail.length > 10) r.trail.shift()
+          if (r.trail.length > 8) r.trail.shift()
           r.y -= r.speed
+          ctx.save()
+          ctx.filter = 'blur(2px)'
           r.trail.forEach((pt, i) => {
-            const a = (i / r.trail.length) * .5
-            ctx.save(); ctx.filter = 'blur(3px)'
-            ctx.beginPath(); ctx.arc(pt.x, pt.y, 3 - i * .2, 0, Math.PI * 2)
-            ctx.fillStyle = `hsla(${r.hue},70%,70%,${a})`
-            ctx.fill(); ctx.restore()
+            ctx.beginPath()
+            ctx.arc(pt.x, pt.y, 3 - i * .3, 0, Math.PI * 2)
+            ctx.fillStyle = `hsla(${r.hue},70%,70%,${(i / r.trail.length) * .5})`
+            ctx.fill()
           })
-          ctx.save(); ctx.filter = 'blur(2px)'
-          ctx.beginPath(); ctx.arc(r.x, r.y, 4, 0, Math.PI * 2)
+          ctx.beginPath()
+          ctx.arc(r.x, r.y, 4, 0, Math.PI * 2)
           ctx.fillStyle = `hsla(${r.hue},80%,80%,.9)`
-          ctx.fill(); ctx.restore()
+          ctx.fill()
+          ctx.restore()
           if (r.y <= r.targetY) { r.exploded = true; explode(r.x, r.y, r.hue) }
         })
-        particles = particles.filter(p => p.alpha > .012)
-        particles.forEach(p => {
-          p.x += p.vx; p.y += p.vy; p.vy += p.g; p.alpha *= p.decay
-          ctx.save(); ctx.filter = 'blur(2.5px)'
-          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-          ctx.fillStyle = `hsla(${p.hue},68%,68%,${p.alpha})`
-          ctx.fill(); ctx.restore()
-        })
 
-        // Only cleanup once all rockets launched AND all particles gone
         if (allLaunched && rockets.every(r => r.exploded) && particles.length === 0) {
           cancelAnimationFrame(rafFw)
           canvas.remove()

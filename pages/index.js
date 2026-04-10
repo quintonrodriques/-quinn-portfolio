@@ -767,7 +767,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
 
       const spawnRocket = (x, targetY, hue, delay) => {
         setTimeout(() => {
-          rockets.push({ x, y: H + 8, targetY, speed: 16 + Math.random() * 10, hue, trail: [], exploded: false })
+          rockets.push({ x, y: H + 8, targetY, speed: 48 + Math.random() * 16, hue, trail: [], exploded: false })
         }, delay)
       }
 
@@ -783,7 +783,7 @@ export default function Home({ uiProjects, uxProjects, about }) {
             alpha: .6 + Math.random() * .2,
             hue: hue + (Math.random() - .5) * 28,
             g: .012 + Math.random() * .008,
-            decay: .968 + Math.random() * .008
+            decay: .988 + Math.random() * .006  // slower fade — particles linger longer
           })
         }
       }
@@ -801,7 +801,8 @@ export default function Home({ uiProjects, uxProjects, about }) {
         { delay: 1060,x: W*.35, ty: H*.18, hue: HUES[4] },
       ]
       launches.forEach(l => spawnRocket(l.x, l.ty, l.hue, l.delay))
-      setTimeout(() => { allLaunched = true }, launches[launches.length-1].delay + 200)
+      // allLaunched fires after last rocket + a generous buffer for its particles to spawn
+      setTimeout(() => { allLaunched = true }, launches[launches.length-1].delay + 1500)
 
       // Subtle bg tint
       const prevBg = document.body.style.background
@@ -841,8 +842,8 @@ export default function Home({ uiProjects, uxProjects, about }) {
           ctx.fill(); ctx.restore()
         })
 
-        // Auto-cleanup once all launched and last particle fades
-        if (allLaunched && particles.length === 0 && rockets.every(r => r.exploded)) {
+        // Only cleanup once all rockets launched AND all particles gone
+        if (allLaunched && rockets.every(r => r.exploded) && particles.length === 0) {
           cancelAnimationFrame(rafFw)
           canvas.remove()
           return
